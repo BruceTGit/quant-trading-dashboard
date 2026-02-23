@@ -368,8 +368,19 @@
 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
                     <div class="card">
-                        <div class="card-header"><div class="card-title">BTC/USDT 行情</div></div>
-                        <div class="card-body"><div class="chart-container">K线图占位</div></div>
+                        <div class="card-header">
+                            <div class="card-title">BTC/USDT 实时K线</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('1m')">1分</button>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('5m')">5分</button>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('15m')">15分</button>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('1h')">1小时</button>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('1d')">日线</button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <canvas id="klineCanvas" width="800" height="400" style="width: 100%; height: 400px;"></canvas>
+                        </div>
                     </div>
                     <div class="card">
                         <div class="card-header"><div class="card-title">快速下单</div></div>
@@ -740,6 +751,125 @@
             }
         }
 
+        // K线数据
+        let klineData = [];
+        let currentInterval = '1h';
+        const canvas = document.getElementById('klineCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 获取K线数据
+        async function fetchKlineData() {
+            try {
+                const limit = 100;
+                const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${currentInterval}&limit=${limit}`);
+                const data = await response.json();
+                klineData = data.map(k => ({
+                    time: k[0],
+                    open: parseFloat(k[1]),
+                    high: parseFloat(k[2]),
+                    low: parseFloat(k[3]),
+                    close: parseFloat(k[4]),
+                    volume: parseFloat(k[5])
+                }));
+                drawKlineChart();
+            } catch (error) {
+                console.error('获取K线数据失败:', error);
+            }
+        }
+
+        // 绘制K线图
+        function drawKlineChart() {
+            if (klineData.length === 0) return;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = { top: 20, right: 60, bottom: 30, left: 10 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            
+            // 清空画布
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(0, 0, width, height);
+            
+            // 计算价格范围
+            const prices = klineData.flatMap(k => [k.high, k.low]);
+            const maxPrice = Math.max(...prices);
+            const minPrice = Math.min(...prices);
+            const priceRange = maxPrice - minPrice;
+            
+            // 绘制网格
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding.top + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+                
+                // 价格标签
+                const price = maxPrice - (priceRange / 5) * i;
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('$' + price.toFixed(0), width - padding.right + 5, y + 4);
+            }
+            
+            // 绘制K线
+            const candleWidth = chartWidth / klineData.length * 0.7;
+            const candleSpacing = chartWidth / klineData.length;
+            
+            klineData.forEach((k, i) => {
+                const x = padding.left + i * candleSpacing + candleSpacing / 2;
+                const isUp = k.close >= k.open;
+                
+                // 计算Y坐标
+                const yOpen = padding.top + (maxPrice - k.open) / priceRange * chartHeight;
+                const yClose = padding.top + (maxPrice - k.close) / priceRange * chartHeight;
+                const yHigh = padding.top + (maxPrice - k.high) / priceRange * chartHeight;
+                const yLow = padding.top + (maxPrice - k.low) / priceRange * chartHeight;
+                
+                // 颜色
+                ctx.fillStyle = isUp ? '#10b981' : '#ef4444';
+                ctx.strokeStyle = isUp ? '#10b981' : '#ef4444';
+                
+                // 绘制影线
+                ctx.beginPath();
+                ctx.moveTo(x, yHigh);
+                ctx.lineTo(x, yLow);
+                ctx.stroke();
+                
+                // 绘制实体
+                const bodyHeight = Math.max(Math.abs(yClose - yOpen), 1);
+                ctx.fillRect(x - candleWidth / 2, Math.min(yOpen, yClose), candleWidth, bodyHeight);
+            });
+            
+            // 绘制最新价格线
+            const lastPrice = klineData[klineData.length - 1].close;
+            const yLast = padding.top + (maxPrice - lastPrice) / priceRange * chartHeight;
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(padding.left, yLast);
+            ctx.lineTo(width - padding.right, yLast);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // 最新价格标签
+            ctx.fillStyle = '#3b82f6';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('$' + lastPrice.toFixed(2), width - padding.right + 5, yLast + 4);
+        }
+
+        // 切换时间周期
+        function changeInterval(interval) {
+            currentInterval = interval;
+            fetchKlineData();
+            showToast(`已切换到 ${interval} K线`, 'success');
+        }
+
         // 获取价格（模拟或真实）
         async function fetchBinancePrices() {
             if (simulationMode && simIndex < simulatedPrices.length) {
@@ -1088,7 +1218,9 @@
 
         // 启动
         fetchBinancePrices();
+        fetchKlineData();
         setInterval(fetchBinancePrices, 5000);
+        setInterval(fetchKlineData, 30000); // 每30秒更新K线
         setInterval(checkStrategy, 10000);
         loadData();
     </script>
