@@ -721,7 +721,67 @@
 
     <script>
         // 价格数据
-        const prices = { BTC: 67234.56, ETH: 3521.89, SOL: 112.34 };
+        let prices = { BTC: 0, ETH: 0, SOL: 0 };
+        let priceChanges = { BTC: 0, ETH: 0, SOL: 0 };
+
+        // 从币安获取实时价格
+        async function fetchBinancePrices() {
+            try {
+                const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
+                const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(symbols)}`);
+                const data = await response.json();
+                
+                data.forEach(ticker => {
+                    const symbol = ticker.symbol.replace('USDT', '');
+                    const oldPrice = prices[symbol];
+                    prices[symbol] = parseFloat(ticker.lastPrice);
+                    priceChanges[symbol] = parseFloat(ticker.priceChangePercent);
+                    
+                    // 价格更新高亮效果
+                    if (oldPrice > 0 && oldPrice !== prices[symbol]) {
+                        highlightPriceChange(symbol, prices[symbol] > oldPrice);
+                    }
+                });
+                
+                updatePriceDisplay();
+                updateUI();
+            } catch (error) {
+                console.error('获取价格失败:', error);
+                // 使用默认价格
+                prices = { BTC: 67234.56, ETH: 3521.89, SOL: 112.34 };
+                updatePriceDisplay();
+            }
+        }
+
+        // 高亮价格变化
+        function highlightPriceChange(symbol, isUp) {
+            const priceInput = document.getElementById('priceInput');
+            const currentSymbol = document.getElementById('symbolSelect').value;
+            if (currentSymbol === symbol) {
+                priceInput.style.transition = 'background-color 0.3s';
+                priceInput.style.backgroundColor = isUp ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+                setTimeout(() => {
+                    priceInput.style.backgroundColor = '';
+                }, 500);
+            }
+        }
+
+        // 更新价格显示
+        function updatePriceDisplay() {
+            const symbol = document.getElementById('symbolSelect').value;
+            const price = prices[symbol];
+            const change = priceChanges[symbol];
+            
+            document.getElementById('priceInput').value = price.toFixed(2);
+            
+            // 更新行情显示
+            const btcPriceEl = document.querySelector('#trade-tab .card-title span:last-child');
+            if (btcPriceEl) {
+                const sign = change >= 0 ? '▲' : '▼';
+                btcPriceEl.textContent = `$${price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${sign} ${Math.abs(change).toFixed(2)}%`;
+                btcPriceEl.style.color = change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            }
+        }
         let account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
         const FEE_RATE = 0.001;
 
@@ -860,8 +920,12 @@
 
         // 切换交易对
         document.getElementById('symbolSelect').addEventListener('change', function() {
-            document.getElementById('priceInput').value = prices[this.value].toFixed(2);
+            updatePriceDisplay();
         });
+
+        // 启动价格轮询
+        fetchBinancePrices();
+        setInterval(fetchBinancePrices, 5000);
 
         // 运行回测
         function runBacktest() {
