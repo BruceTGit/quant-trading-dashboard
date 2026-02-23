@@ -371,6 +371,7 @@
                         <div class="card-header">
                             <div class="card-title">BTC/USDT 实时K线</div>
                             <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('1s')">1秒</button>
                                 <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('1m')">1分</button>
                                 <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('5m')">5分</button>
                                 <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="changeInterval('15m')">15分</button>
@@ -798,7 +799,8 @@
         function generateMockKlineData() {
             const basePrice = 67000;
             const now = Date.now();
-            const intervalMs = currentInterval === '1m' ? 60000 : 
+            const intervalMs = currentInterval === '1s' ? 1000 :
+                              currentInterval === '1m' ? 60000 : 
                               currentInterval === '5m' ? 300000 : 
                               currentInterval === '15m' ? 900000 : 
                               currentInterval === '1h' ? 3600000 : 86400000;
@@ -808,11 +810,11 @@
             
             for (let i = 99; i >= 0; i--) {
                 const time = now - i * intervalMs;
-                const change = (Math.random() - 0.5) * 500;
+                const change = (Math.random() - 0.5) * (currentInterval === '1s' ? 50 : 500);
                 const open = price;
                 const close = price + change;
-                const high = Math.max(open, close) + Math.random() * 200;
-                const low = Math.min(open, close) - Math.random() * 200;
+                const high = Math.max(open, close) + Math.random() * (currentInterval === '1s' ? 20 : 200);
+                const low = Math.min(open, close) - Math.random() * (currentInterval === '1s' ? 20 : 200);
                 
                 klineData.push({
                     time: time,
