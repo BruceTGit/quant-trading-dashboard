@@ -428,6 +428,7 @@
                     <div class="card-header">
                         <div class="card-title">自动运行策略</div>
                         <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="toggleSimulation()" id="simBtn">模拟连续交易</button>
                             <span id="strategyStatus" class="badge badge-success">运行中</span>
                             <button class="btn btn-secondary" onclick="toggleAutoStrategy()" id="autoStrategyBtn">暂停</button>
                         </div>
@@ -684,8 +685,75 @@
             initialValue: 1000000
         };
 
-        // 从币安获取实时价格
+        // 模拟模式开关
+        let simulationMode = false;
+        let simulatedPrices = [];
+        let simIndex = 0;
+
+        // 生成模拟价格数据（制造金叉死叉）
+        function generateSimulatedPrices() {
+            const basePrice = 67000;
+            const prices = [];
+            let price = basePrice;
+            
+            // 先生成20个价格让MA20有值
+            for (let i = 0; i < 20; i++) {
+                price = basePrice + (Math.random() - 0.5) * 500;
+                prices.push(price);
+            }
+            
+            // 制造金叉：价格持续上涨，MA5上穿MA20
+            for (let i = 0; i < 10; i++) {
+                price = basePrice + 1000 + i * 200 + (Math.random() - 0.5) * 300;
+                prices.push(price);
+            }
+            
+            // 制造死叉：价格持续下跌，MA5下穿MA20
+            for (let i = 0; i < 10; i++) {
+                price = basePrice - 500 - i * 300 + (Math.random() - 0.5) * 200;
+                prices.push(price);
+            }
+            
+            // 再制造一次金叉
+            for (let i = 0; i < 10; i++) {
+                price = basePrice + 1500 + i * 250 + (Math.random() - 0.5) * 300;
+                prices.push(price);
+            }
+            
+            return prices;
+        }
+
+        // 切换模拟模式
+        function toggleSimulation() {
+            simulationMode = !simulationMode;
+            if (simulationMode) {
+                simulatedPrices = generateSimulatedPrices();
+                simIndex = 0;
+                addTradeLog('🎮 模拟模式已启动！将模拟连续交易', 'signal');
+                addTradeLog(`📊 已生成 ${simulatedPrices.length} 个模拟价格点`, 'info');
+                document.getElementById('simBtn').textContent = '停止模拟';
+                document.getElementById('simBtn').style.background = 'var(--accent-red)';
+            } else {
+                addTradeLog('🛑 模拟模式已停止', 'error');
+                document.getElementById('simBtn').textContent = '模拟连续交易';
+                document.getElementById('simBtn').style.background = '';
+            }
+        }
+
+        // 获取价格（模拟或真实）
         async function fetchBinancePrices() {
+            if (simulationMode && simIndex < simulatedPrices.length) {
+                // 使用模拟价格
+                prices.BTC = simulatedPrices[simIndex];
+                simIndex++;
+                addTradeLog(`[模拟] 当前价格: $${prices.BTC.toFixed(2)}`, 'info');
+                updatePriceDisplay();
+                updateUI();
+                checkStrategy();
+                return;
+            }
+            
+            // 真实价格获取
             try {
                 const response = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT","SOLUSDT"]');
                 const data = await response.json();
