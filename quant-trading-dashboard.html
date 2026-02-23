@@ -474,6 +474,15 @@
                 </div>
 
                 <div class="card" style="margin-top: 20px;">
+                    <div class="card-header"><div class="card-title">实时交易日志</div></div>
+                    <div class="card-body" style="padding: 0; max-height: 300px; overflow-y: auto;">
+                        <div id="tradeLog" style="padding: 16px; font-family: monospace; font-size: 13px; line-height: 1.8;">
+                            <div style="color: var(--text-secondary);">[系统] 策略已启动，等待交易信号...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
                     <div class="card-header"><div class="card-title">策略交易记录</div></div>
                     <div class="card-body" style="padding: 0;">
                         <div style="overflow-x: auto;">
@@ -814,6 +823,29 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
+        // 添加交易日志
+        function addTradeLog(message, type = 'info') {
+            const logContainer = document.getElementById('tradeLog');
+            const time = new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+            const colorMap = {
+                'buy': 'var(--accent-green)',
+                'sell': 'var(--accent-red)',
+                'signal': 'var(--accent-yellow)',
+                'info': 'var(--text-secondary)',
+                'error': 'var(--accent-red)'
+            };
+            const logEntry = document.createElement('div');
+            logEntry.style.color = colorMap[type] || colorMap['info'];
+            logEntry.style.marginBottom = '4px';
+            logEntry.textContent = `[${time}] ${message}`;
+            logContainer.insertBefore(logEntry, logContainer.firstChild);
+            
+            // 只保留最近50条日志
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
         // 计算均线
         function calculateMA(period) {
             if (autoStrategy.priceHistory.length < period) return null;
@@ -839,17 +871,30 @@
             const prevMa5 = autoStrategy.priceHistory.length > 5 ? 
                 autoStrategy.priceHistory.slice(-6, -1).reduce((a, b) => a + b, 0) / 5 : ma5;
 
+            // 记录价格检查日志
+            const trend = ma5 > ma20 ? '多头' : '空头';
+            addTradeLog(`价格检查: BTC=$${currentPrice.toFixed(2)}, MA5=$${ma5.toFixed(2)}, MA20=$${ma20.toFixed(2)}, 趋势:${trend}`, 'info');
+
+            // 金叉买入
             if (prevMa5 <= ma20 && ma5 > ma20 && autoStrategy.position === 'none') {
+                addTradeLog(`🟢 金叉信号! MA5($${ma5.toFixed(2)}) 上穿 MA20($${ma20.toFixed(2)})`, 'signal');
                 executeStrategyOrder('buy', currentPrice);
                 signal.innerHTML = `<span class="price-up">买入信号触发</span> @ $${currentPrice.toFixed(2)}`;
-            } else if (prevMa5 >= ma20 && ma5 < ma20 && autoStrategy.position === 'long') {
+            }
+            // 死叉卖出
+            else if (prevMa5 >= ma20 && ma5 < ma20 && autoStrategy.position === 'long') {
+                addTradeLog(`🔴 死叉信号! MA5($${ma5.toFixed(2)}) 下穿 MA20($${ma20.toFixed(2)})`, 'signal');
                 executeStrategyOrder('sell', currentPrice);
                 signal.innerHTML = `<span class="price-down">卖出信号触发</span> @ $${currentPrice.toFixed(2)}`;
-            } else {
+            }
+            else {
                 signal.innerHTML = `MA5: $${ma5.toFixed(2)} | MA20: $${ma20.toFixed(2)} | ${ma5 > ma20 ? '<span class="price-up">多头</span>' : '<span class="price-down">空头</span>'}`;
             }
 
+            // 止损检查
             if (autoStrategy.position === 'long' && currentPrice < autoStrategy.entryPrice * 0.95) {
+                const lossPct = ((currentPrice - autoStrategy.entryPrice) / autoStrategy.entryPrice * 100).toFixed(2);
+                addTradeLog(`⚠️ 止损触发! 当前价格 $${currentPrice.toFixed(2)} 低于入场价 $${autoStrategy.entryPrice.toFixed(2)} (${lossPct}%)`, 'error');
                 executeStrategyOrder('sell', currentPrice, true);
                 signal.innerHTML = `<span class="price-down">止损触发</span> @ $${currentPrice.toFixed(2)}`;
             }
@@ -859,23 +904,40 @@
         // 执行策略订单
         function executeStrategyOrder(side, price, isStopLoss = false) {
             const investAmount = account.balance * 0.5;
+            const fee = investAmount * FEE_RATE;
+            
             if (side === 'buy') {
                 const amount = investAmount / price;
-                const fee = investAmount * FEE_RATE;
+                addTradeLog(`💰 执行买入: 投入 $${investAmount.toFixed(2)} (50%资金), 价格 $${price.toFixed(2)}, 数量 ${amount.toFixed(6)} BTC, 手续费 $${fee.toFixed(2)}`, 'buy');
+                
                 account.balance -= (investAmount + fee);
                 account.positions.BTC = { amount, avgPrice: price, cost: investAmount };
                 autoStrategy.position = 'long';
                 autoStrategy.entryPrice = price;
+                
+                addTradeLog(`✅ 买入完成: 持仓 ${amount.toFixed(6)} BTC, 剩余余额 $${account.balance.toFixed(2)}`, 'buy');
             } else {
                 if (!account.positions.BTC) return;
                 const pos = account.positions.BTC;
                 const sellValue = pos.amount * price;
-                const fee = sellValue * FEE_RATE;
-                const profit = sellValue - pos.cost - fee;
-                account.balance += (sellValue - fee);
+                const sellFee = sellValue * FEE_RATE;
+                const profit = sellValue - pos.cost - sellFee;
+                const profitPct = (profit / pos.cost * 100).toFixed(2);
+                
+                const reason = isStopLoss ? '【止损】' : '【止盈/信号】';
+                addTradeLog(`${reason} 执行卖出: 价格 $${price.toFixed(2)}, 数量 ${pos.amount.toFixed(6)} BTC, 价值 $${sellValue.toFixed(2)}, 手续费 $${sellFee.toFixed(2)}`, 'sell');
+                
+                account.balance += (sellValue - sellFee);
                 delete account.positions.BTC;
                 autoStrategy.position = 'none';
-                if (profit > 0) autoStrategy.wins++; else autoStrategy.losses++;
+                
+                if (profit > 0) {
+                    autoStrategy.wins++;
+                    addTradeLog(`🟢 盈利: +$${profit.toFixed(2)} (+${profitPct}%), 当前余额 $${account.balance.toFixed(2)}`, 'buy');
+                } else {
+                    autoStrategy.losses++;
+                    addTradeLog(`🔴 亏损: $${profit.toFixed(2)} (${profitPct}%), 当前余额 $${account.balance.toFixed(2)}`, 'sell');
+                }
             }
             autoStrategy.trades.push({ time: Date.now(), side, price, amount: side === 'buy' ? investAmount / price : 0, isStopLoss });
             saveData();
