@@ -754,8 +754,20 @@
         // K线数据
         let klineData = [];
         let currentInterval = '1h';
-        const canvas = document.getElementById('klineCanvas');
-        const ctx = canvas.getContext('2d');
+        let canvas, ctx;
+
+        // 初始化Canvas
+        function initCanvas() {
+            canvas = document.getElementById('klineCanvas');
+            if (!canvas) return;
+            
+            // 设置Canvas实际尺寸
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width || 800;
+            canvas.height = rect.height || 400;
+            
+            ctx = canvas.getContext('2d');
+        }
 
         // 获取K线数据
         async function fetchKlineData() {
@@ -779,7 +791,12 @@
 
         // 绘制K线图
         function drawKlineChart() {
-            if (klineData.length === 0) return;
+            if (!ctx || klineData.length === 0) return;
+            
+            // 重新获取Canvas尺寸
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width || 800;
+            canvas.height = rect.height || 400;
             
             const width = canvas.width;
             const height = canvas.height;
@@ -1217,6 +1234,7 @@
         }
 
         // 启动
+        initCanvas();
         fetchBinancePrices();
         fetchKlineData();
         setInterval(fetchBinancePrices, 5000);
