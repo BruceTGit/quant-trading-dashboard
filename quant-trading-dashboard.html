@@ -757,10 +757,22 @@
 
         // 获取K线数据
         async function fetchKlineData() {
+            const container = document.getElementById('klineContainer');
+            container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #9ca3af;">加载中...</div>';
+            
             try {
+                // 尝试币安API
                 const limit = 100;
-                const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${currentInterval}&limit=${limit}`);
+                const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${currentInterval}&limit=${limit}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (!response.ok) throw new Error('API请求失败');
+                
                 const data = await response.json();
+                if (!Array.isArray(data) || data.length === 0) throw new Error('数据为空');
+                
                 klineData = data.map(k => ({
                     time: k[0],
                     open: parseFloat(k[1]),
@@ -769,10 +781,47 @@
                     close: parseFloat(k[4]),
                     volume: parseFloat(k[5])
                 }));
+                
                 renderKlineSVG();
             } catch (error) {
                 console.error('获取K线数据失败:', error);
-                document.getElementById('klineContainer').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #9ca3af;">获取数据失败，请刷新重试</div>';
+                // 使用模拟数据作为备用
+                generateMockKlineData();
+                renderKlineSVG();
+                showToast('使用模拟数据展示', 'warning');
+            }
+        }
+
+        // 生成模拟K线数据
+        function generateMockKlineData() {
+            const basePrice = 67000;
+            const now = Date.now();
+            const intervalMs = currentInterval === '1m' ? 60000 : 
+                              currentInterval === '5m' ? 300000 : 
+                              currentInterval === '15m' ? 900000 : 
+                              currentInterval === '1h' ? 3600000 : 86400000;
+            
+            klineData = [];
+            let price = basePrice;
+            
+            for (let i = 99; i >= 0; i--) {
+                const time = now - i * intervalMs;
+                const change = (Math.random() - 0.5) * 500;
+                const open = price;
+                const close = price + change;
+                const high = Math.max(open, close) + Math.random() * 200;
+                const low = Math.min(open, close) - Math.random() * 200;
+                
+                klineData.push({
+                    time: time,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close,
+                    volume: Math.random() * 100
+                });
+                
+                price = close;
             }
         }
 
