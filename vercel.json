@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "quant-trading-dashboard",
+  "builds": [
+    {
+      "src": "quant-trading-dashboard.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/quant-trading-dashboard.html"
+    }
+  ]
+}
