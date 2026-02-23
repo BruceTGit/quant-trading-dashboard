@@ -761,10 +761,9 @@
             canvas = document.getElementById('klineCanvas');
             if (!canvas) return;
             
-            // 设置Canvas实际尺寸
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width || 800;
-            canvas.height = rect.height || 400;
+            // 设置Canvas实际尺寸 - 使用固定尺寸避免0值问题
+            canvas.width = 800;
+            canvas.height = 400;
             
             ctx = canvas.getContext('2d');
         }
@@ -791,15 +790,14 @@
 
         // 绘制K线图
         function drawKlineChart() {
-            if (!ctx || klineData.length === 0) return;
+            if (!ctx || klineData.length === 0) {
+                console.log('Canvas或数据未准备好', ctx, klineData);
+                return;
+            }
             
-            // 重新获取Canvas尺寸
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width || 800;
-            canvas.height = rect.height || 400;
-            
-            const width = canvas.width;
-            const height = canvas.height;
+            // 使用固定尺寸
+            const width = 800;
+            const height = 400;
             const padding = { top: 20, right: 60, bottom: 30, left: 10 };
             const chartWidth = width - padding.left - padding.right;
             const chartHeight = height - padding.top - padding.bottom;
