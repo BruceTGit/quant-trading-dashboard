@@ -259,7 +259,7 @@
         .strategy-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
         .strategy-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-bottom: 16px;
         }
@@ -295,44 +295,12 @@
         input:checked + .slider { background-color: var(--accent-green); }
         input:checked + .slider:before { transform: translateX(24px); }
         .chart-container { height: 300px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .progress-bar {
-            height: 8px;
-            background: var(--bg-card);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--accent-blue);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-        .risk-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .risk-item:last-child { border-bottom: none; }
-        .risk-label { font-weight: 500; }
-        .risk-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-        .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .metric-card {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-        }
-        .metric-value { font-size: 24px; font-weight: 700; }
-        .metric-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
         .empty-state { text-align: center; padding: 40px; color: var(--text-secondary); }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         @media (max-width: 1200px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .report-grid { grid-template-columns: 1fr; }
             .sidebar { display: none; }
         }
     </style>
@@ -506,47 +474,23 @@
                 </div>
 
                 <div class="card" style="margin-top: 20px;">
-                    <div class="card-header">
-                        <div class="card-title">策略交易记录</div>
-                    </div>
+                    <div class="card-header"><div class="card-title">策略交易记录</div></div>
                     <div class="card-body" style="padding: 0;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>时间</th>
-                                    <th>信号</th>
-                                    <th>价格</th>
-                                    <th>仓位</th>
-                                    <th>盈亏</th>
-                                </tr>
-                            </thead>
-                            <tbody id="strategyTradeHistory">
-                                <tr>
-                                    <td colspan="5" class="empty-state">暂无交易记录</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div class="strategy-stats">
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">+8.3%</div>
-                                        <div class="strategy-stat-label">累计收益</div>
-                                    </div>
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">72%</div>
-                                        <div class="strategy-stat-label">胜率</div>
-                                    </div>
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">48</div>
-                                        <div class="strategy-stat-label">交易次数</div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 120px;">时间</th>
+                                        <th style="min-width: 80px;">信号</th>
+                                        <th style="min-width: 100px;">价格</th>
+                                        <th style="min-width: 100px;">仓位</th>
+                                        <th style="min-width: 100px;">盈亏</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="strategyTradeHistory">
+                                    <tr><td colspan="5" class="empty-state">暂无交易记录</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -597,25 +541,24 @@
                 <div class="card" id="backtestResult" style="display: none;">
                     <div class="card-header"><div class="card-title">回测结果</div></div>
                     <div class="card-body">
-                        <div class="report-grid">
-                            <div class="metric-card">
-                                <div class="metric-value" style="color: var(--accent-green);">+24.56%</div>
-                                <div class="metric-label">总收益率</div>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                            <div style="background: var(--bg-card); padding: 16px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: var(--accent-green);">+24.56%</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">总收益率</div>
                             </div>
-                            <div class="metric-card">
-                                <div class="metric-value">1.85</div>
-                                <div class="metric-label">夏普比率</div>
+                            <div style="background: var(--bg-card); padding: 16px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700;">1.85</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">夏普比率</div>
                             </div>
-                            <div class="metric-card">
-                                <div class="metric-value">-8.2%</div>
-                                <div class="metric-label">最大回撤</div>
+                            <div style="background: var(--bg-card); padding: 16px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: var(--accent-red);">-8.2%</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">最大回撤</div>
                             </div>
-                            <div class="metric-card">
-                                <div class="metric-value">64%</div>
-                                <div class="metric-label">胜率</div>
+                            <div style="background: var(--bg-card); padding: 16px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700;">64%</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">胜率</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="margin-top: 20px;">收益曲线图占位</div>
                     </div>
                 </div>
             </div>
@@ -625,71 +568,34 @@
                 <div class="card">
                     <div class="card-header"><div class="card-title">风险控制设置</div></div>
                     <div class="card-body">
-                        <div class="risk-item">
+                        <div style="border-bottom: 1px solid var(--border-color); padding: 16px 0; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div class="risk-label">单笔止损</div>
-                                <div class="risk-desc">单笔交易亏损超过设定比例时自动平仓</div>
+                                <div style="font-weight: 500;">单笔止损</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">单笔交易亏损超过设定比例时自动平仓</div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <input type="number" class="form-input" value="5" style="width: 80px; text-align: center;">
                                 <span>%</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
+                                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                             </div>
                         </div>
-                        <div class="risk-item">
+                        <div style="border-bottom: 1px solid var(--border-color); padding: 16px 0; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div class="risk-label">日累计止损</div>
-                                <div class="risk-desc">当日累计亏损超过设定比例时停止交易</div>
+                                <div style="font-weight: 500;">日累计止损</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">当日累计亏损超过设定比例时停止交易</div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <input type="number" class="form-input" value="10" style="width: 80px; text-align: center;">
                                 <span>%</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
+                                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                             </div>
                         </div>
-                        <div class="risk-item">
+                        <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div class="risk-label">单币种仓位限制</div>
-                                <div class="risk-desc">单个币种持仓不超过总资产的比例</div>
+                                <div style="font-weight: 500;">风险预警通知</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">触发风控条件时发送通知</div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <input type="number" class="form-input" value="50" style="width: 80px; text-align: center;">
-                                <span>%</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="risk-item">
-                            <div>
-                                <div class="risk-label">总仓位限制</div>
-                                <div class="risk-desc">所有持仓不超过总资产的比例</div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <input type="number" class="form-input" value="80" style="width: 80px; text-align: center;">
-                                <span>%</span>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="risk-item">
-                            <div>
-                                <div class="risk-label">风险预警通知</div>
-                                <div class="risk-desc">触发风控条件时发送通知</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
+                            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                         </div>
                     </div>
                 </div>
@@ -720,7 +626,7 @@
                     </div>
                 </div>
 
-                <div class="report-grid">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="card">
                         <div class="card-header"><div class="card-title">收益曲线</div></div>
                         <div class="card-body"><div class="chart-container">收益曲线图</div></div>
@@ -735,9 +641,7 @@
                     <div class="card-header"><div class="card-title">月度收益统计</div></div>
                     <div class="card-body" style="padding: 0;">
                         <table>
-                            <thead>
-                                <tr><th>月份</th><th>收益率</th><th>盈亏额</th><th>交易次数</th><th>胜率</th></tr>
-                            </thead>
+                            <thead><tr><th>月份</th><th>收益率</th><th>盈亏额</th><th>交易次数</th><th>胜率</th></tr></thead>
                             <tbody>
                                 <tr><td>2026-02</td><td class="price-up">+8.5%</td><td class="price-up">+$85,000</td><td>45</td><td>68%</td></tr>
                                 <tr><td>2026-01</td><td class="price-up">+12.3%</td><td class="price-up">+$123,000</td><td>52</td><td>71%</td></tr>
@@ -755,75 +659,58 @@
         // 价格数据
         let prices = { BTC: 0, ETH: 0, SOL: 0 };
         let priceChanges = { BTC: 0, ETH: 0, SOL: 0 };
+        let account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
+        const FEE_RATE = 0.001;
+
+        // 自动策略状态
+        let autoStrategy = {
+            enabled: true,
+            symbol: 'BTC',
+            position: 'none',
+            entryPrice: 0,
+            trades: [],
+            wins: 0,
+            losses: 0,
+            priceHistory: [],
+            initialValue: 1000000
+        };
 
         // 从币安获取实时价格
         async function fetchBinancePrices() {
             try {
-                const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
-                const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(symbols)}`);
+                const response = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT","SOLUSDT"]');
                 const data = await response.json();
-                
                 data.forEach(ticker => {
                     const symbol = ticker.symbol.replace('USDT', '');
-                    const oldPrice = prices[symbol];
                     prices[symbol] = parseFloat(ticker.lastPrice);
                     priceChanges[symbol] = parseFloat(ticker.priceChangePercent);
-                    
-                    // 价格更新高亮效果
-                    if (oldPrice > 0 && oldPrice !== prices[symbol]) {
-                        highlightPriceChange(symbol, prices[symbol] > oldPrice);
-                    }
                 });
-                
                 updatePriceDisplay();
                 updateUI();
             } catch (error) {
-                console.error('获取价格失败:', error);
-                // 使用默认价格
                 prices = { BTC: 67234.56, ETH: 3521.89, SOL: 112.34 };
                 updatePriceDisplay();
-            }
-        }
-
-        // 高亮价格变化
-        function highlightPriceChange(symbol, isUp) {
-            const priceInput = document.getElementById('priceInput');
-            const currentSymbol = document.getElementById('symbolSelect').value;
-            if (currentSymbol === symbol) {
-                priceInput.style.transition = 'background-color 0.3s';
-                priceInput.style.backgroundColor = isUp ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
-                setTimeout(() => {
-                    priceInput.style.backgroundColor = '';
-                }, 500);
             }
         }
 
         // 更新价格显示
         function updatePriceDisplay() {
             const symbol = document.getElementById('symbolSelect').value;
-            const price = prices[symbol];
-            const change = priceChanges[symbol];
-            
-            document.getElementById('priceInput').value = price.toFixed(2);
-            
-            // 更新行情显示
-            const btcPriceEl = document.querySelector('#trade-tab .card-title span:last-child');
-            if (btcPriceEl) {
-                const sign = change >= 0 ? '▲' : '▼';
-                btcPriceEl.textContent = `$${price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${sign} ${Math.abs(change).toFixed(2)}%`;
-                btcPriceEl.style.color = change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-            }
+            document.getElementById('priceInput').value = prices[symbol].toFixed(2);
         }
-        let account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
-        const FEE_RATE = 0.001;
 
         // 加载数据
         function loadData() {
             const saved = localStorage.getItem('quantAccount');
             if (saved) account = JSON.parse(saved);
+            const savedStrategy = localStorage.getItem('autoStrategy');
+            if (savedStrategy) autoStrategy = JSON.parse(savedStrategy);
             updateUI();
+            updateStrategyUI();
         }
+
         function saveData() { localStorage.setItem('quantAccount', JSON.stringify(account)); }
+        function saveStrategyData() { localStorage.setItem('autoStrategy', JSON.stringify(autoStrategy)); }
 
         // 更新UI
         function updateUI() {
@@ -909,8 +796,11 @@
         function resetAccount() {
             if (confirm('确定重置账户？所有数据将清空。')) {
                 account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
+                autoStrategy = { enabled: true, symbol: 'BTC', position: 'none', entryPrice: 0, trades: [], wins: 0, losses: 0, priceHistory: [], initialValue: 1000000 };
                 saveData();
+                saveStrategyData();
                 updateUI();
+                updateStrategyUI();
                 showToast('账户已重置', 'success');
             }
         }
@@ -924,59 +814,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // 标签切换
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-                tab.classList.add('active');
-                const tabName = tab.dataset.tab;
-                document.getElementById(tabName + '-tab').classList.add('active');
-                document.querySelector(`.sidebar-item[data-tab="${tabName}"]`).classList.add('active');
-            });
-        });
-
-        // 侧边栏切换
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-                const tabName = item.dataset.tab;
-                item.classList.add('active');
-                document.getElementById(tabName + '-tab').classList.add('active');
-                document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
-            });
-        });
-
-        // 自动策略状态
-        let autoStrategy = {
-            enabled: true,
-            symbol: 'BTC',
-            position: 'none', // 'none', 'long'
-            entryPrice: 0,
-            trades: [],
-            wins: 0,
-            losses: 0,
-            priceHistory: [],
-            initialValue: 1000000
-        };
-
-        // 加载策略数据
-        function loadStrategyData() {
-            const saved = localStorage.getItem('autoStrategy');
-            if (saved) {
-                autoStrategy = JSON.parse(saved);
-            }
-            updateStrategyUI();
-        }
-
-        // 保存策略数据
-        function saveStrategyData() {
-            localStorage.setItem('autoStrategy', JSON.stringify(autoStrategy));
-        }
-
         // 计算均线
         function calculateMA(period) {
             if (autoStrategy.priceHistory.length < period) return null;
@@ -987,16 +824,12 @@
         // 执行策略检查
         function checkStrategy() {
             if (!autoStrategy.enabled || prices.BTC === 0) return;
-
             const currentPrice = prices.BTC;
             autoStrategy.priceHistory.push(currentPrice);
-            if (autoStrategy.priceHistory.length > 50) {
-                autoStrategy.priceHistory.shift();
-            }
+            if (autoStrategy.priceHistory.length > 50) autoStrategy.priceHistory.shift();
 
             const ma5 = calculateMA(5);
             const ma20 = calculateMA(20);
-
             if (!ma5 || !ma20) {
                 document.getElementById('strategySignal').textContent = '收集数据中... (需要至少20个价格点)';
                 return;
@@ -1006,33 +839,26 @@
             const prevMa5 = autoStrategy.priceHistory.length > 5 ? 
                 autoStrategy.priceHistory.slice(-6, -1).reduce((a, b) => a + b, 0) / 5 : ma5;
 
-            // 金叉买入
             if (prevMa5 <= ma20 && ma5 > ma20 && autoStrategy.position === 'none') {
                 executeStrategyOrder('buy', currentPrice);
-                signal.innerHTML = `<span class="price-up">🟢 买入信号触发</span> - 5日均线上穿20日均线 @ $${currentPrice.toFixed(2)}`;
-            }
-            // 死叉卖出
-            else if (prevMa5 >= ma20 && ma5 < ma20 && autoStrategy.position === 'long') {
+                signal.innerHTML = `<span class="price-up">买入信号触发</span> @ $${currentPrice.toFixed(2)}`;
+            } else if (prevMa5 >= ma20 && ma5 < ma20 && autoStrategy.position === 'long') {
                 executeStrategyOrder('sell', currentPrice);
-                signal.innerHTML = `<span class="price-down">🔴 卖出信号触发</span> - 5日均线下穿20日均线 @ $${currentPrice.toFixed(2)}`;
-            }
-            else {
+                signal.innerHTML = `<span class="price-down">卖出信号触发</span> @ $${currentPrice.toFixed(2)}`;
+            } else {
                 signal.innerHTML = `MA5: $${ma5.toFixed(2)} | MA20: $${ma20.toFixed(2)} | ${ma5 > ma20 ? '<span class="price-up">多头</span>' : '<span class="price-down">空头</span>'}`;
             }
 
-            // 止损检查
             if (autoStrategy.position === 'long' && currentPrice < autoStrategy.entryPrice * 0.95) {
                 executeStrategyOrder('sell', currentPrice, true);
-                signal.innerHTML = `<span class="price-down">🔴 止损触发</span> - 价格下跌超过5% @ $${currentPrice.toFixed(2)}`;
+                signal.innerHTML = `<span class="price-down">止损触发</span> @ $${currentPrice.toFixed(2)}`;
             }
-
             updateStrategyUI();
         }
 
         // 执行策略订单
         function executeStrategyOrder(side, price, isStopLoss = false) {
-            const investAmount = account.balance * 0.5; // 投入50%资金
-            
+            const investAmount = account.balance * 0.5;
             if (side === 'buy') {
                 const amount = investAmount / price;
                 const fee = investAmount * FEE_RATE;
@@ -1046,46 +872,23 @@
                 const sellValue = pos.amount * price;
                 const fee = sellValue * FEE_RATE;
                 const profit = sellValue - pos.cost - fee;
-                
                 account.balance += (sellValue - fee);
                 delete account.positions.BTC;
                 autoStrategy.position = 'none';
-                
-                if (profit > 0) autoStrategy.wins++;
-                else autoStrategy.losses++;
+                if (profit > 0) autoStrategy.wins++; else autoStrategy.losses++;
             }
-
-            const trade = {
-                time: Date.now(),
-                side: side,
-                price: price,
-                amount: side === 'buy' ? investAmount / price : account.positions.BTC?.amount || 0,
-                isStopLoss: isStopLoss
-            };
-            autoStrategy.trades.push(trade);
-            account.trades.push({
-                time: Date.now(),
-                symbol: 'BTC',
-                side: side,
-                price: price,
-                amount: trade.amount,
-                fee: 0
-            });
-
+            autoStrategy.trades.push({ time: Date.now(), side, price, amount: side === 'buy' ? investAmount / price : 0, isStopLoss });
             saveData();
             saveStrategyData();
             updateUI();
             updateStrategyTradeHistory();
-            
-            showToast(`策略${side === 'buy' ? '买入' : '卖出'} ${isStopLoss ? '(止损)' : ''} @ $${price.toFixed(2)}`, side === 'buy' ? 'success' : 'error');
+            showToast(`策略${side === 'buy' ? '买入' : '卖出'}${isStopLoss ? '(止损)' : ''} @ $${price.toFixed(2)}`, side === 'buy' ? 'success' : 'error');
         }
 
         // 更新策略UI
         function updateStrategyUI() {
             const totalTrades = autoStrategy.wins + autoStrategy.losses;
             const winRate = totalTrades > 0 ? (autoStrategy.wins / totalTrades * 100).toFixed(0) : 0;
-            
-            // 计算收益
             const positionValue = account.positions.BTC ? account.positions.BTC.amount * prices.BTC : 0;
             const totalValue = account.balance + positionValue;
             const totalReturn = ((totalValue - autoStrategy.initialValue) / autoStrategy.initialValue * 100).toFixed(2);
@@ -1099,7 +902,6 @@
             document.getElementById('strategyWinRate').textContent = winRate + '%';
             document.getElementById('strategyPosition').textContent = autoStrategy.position === 'long' ? '持仓' : '空仓';
             document.getElementById('strategyPosition').style.color = autoStrategy.position === 'long' ? 'var(--accent-green)' : 'var(--text-secondary)';
-            
             updateStrategyTradeHistory();
         }
 
@@ -1134,17 +936,19 @@
             showToast(autoStrategy.enabled ? '策略已启动' : '策略已暂停', 'success');
         }
 
-        // 启动策略轮询
-        setInterval(checkStrategy, 10000); // 每10秒检查一次
-
-        // 切换交易对
-        document.getElementById('symbolSelect').addEventListener('change', function() {
-            updatePriceDisplay();
+        // 标签切换
+        document.querySelectorAll('.nav-tab, .sidebar-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const tabName = el.dataset.tab;
+                document.querySelectorAll('.nav-tab, .sidebar-item').forEach(e => e.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(e => e.classList.add('active'));
+                document.getElementById(tabName + '-tab').classList.add('active');
+            });
         });
 
-        // 启动价格轮询
-        fetchBinancePrices();
-        setInterval(fetchBinancePrices, 5000);
+        // 切换交易对
+        document.getElementById('symbolSelect').addEventListener('change', updatePriceDisplay);
 
         // 运行回测
         function runBacktest() {
@@ -1152,19 +956,11 @@
             showToast('回测完成', 'success');
         }
 
-        // 切换策略
-        function toggleStrategy(checkbox) {
-            showToast(checkbox.checked ? '策略已启动' : '策略已停止', 'success');
-        }
-
-        // 创建策略
-        function showStrategyModal() {
-            showToast('策略创建功能开发中', 'error');
-        }
-
-        // 初始化
+        // 启动
+        fetchBinancePrices();
+        setInterval(fetchBinancePrices, 5000);
+        setInterval(checkStrategy, 10000);
         loadData();
-        loadStrategyData();
     </script>
 </body>
 </html>
