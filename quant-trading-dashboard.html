@@ -17,6 +17,7 @@
             --accent-red: #ef4444;
             --accent-blue: #3b82f6;
             --accent-yellow: #f59e0b;
+            --accent-purple: #8b5cf6;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -47,7 +48,7 @@
         }
         .logo-icon {
             width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--accent-blue), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -66,6 +67,14 @@
         .nav-tab:hover { background: var(--bg-card); color: var(--text-primary); }
         .nav-tab.active { background: var(--accent-blue); color: white; }
         .header-right { display: flex; align-items: center; gap: 20px; }
+        .account-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-yellow);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
         .status-indicator {
             display: flex;
             align-items: center;
@@ -82,7 +91,7 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .user-avatar {
             width: 36px; height: 36px;
-            background: linear-gradient(135deg, var(--accent-blue), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -90,14 +99,6 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-        }
-        .account-badge {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--accent-yellow);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
         }
         .main-container {
             padding-top: 60px;
@@ -133,13 +134,17 @@
             transition: all 0.2s;
             margin-bottom: 4px;
         }
-        .sidebar-item:hover { background: var(--bg-card); color: var(--text-primary); }
+        .sidebar-item:hover, .sidebar-item.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
         .sidebar-item.active {
             background: rgba(59, 130, 246, 0.15);
             color: var(--accent-blue);
         }
-        .sidebar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
         .content { flex: 1; padding: 24px; overflow-y: auto; background: var(--bg-primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -153,43 +158,18 @@
             padding: 20px;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        .stat-change {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .stat-change { font-size: 13px; display: flex; align-items: center; gap: 4px; }
         .stat-change.positive { color: var(--accent-green); }
         .stat-change.negative { color: var(--accent-red); }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
         .card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
+            margin-bottom: 20px;
         }
         .card-header {
             padding: 16px 20px;
@@ -198,58 +178,29 @@
             align-items: center;
             justify-content: space-between;
         }
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-actions { display: flex; gap: 8px; }
-        .btn-icon {
-            width: 32px; height: 32px;
+        .card-title { font-size: 16px; font-weight: 600; }
+        .card-body { padding: 20px; }
+        .btn {
+            padding: 10px 20px;
             border: none;
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: all 0.2s;
         }
-        .btn-icon:hover { background: var(--border-color); color: var(--text-primary); }
-        .card-body { padding: 20px; }
-        .chart-container { height: 320px; position: relative; }
-        .chart-placeholder {
-            width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .chart-line {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 60%;
-            background: linear-gradient(180deg, rgba(16, 185, 129, 0.3) 0%, transparent 100%);
-            clip-path: polygon(0% 80%, 5% 75%, 10% 70%, 15% 72%, 20% 65%, 25% 60%, 30% 55%, 35% 58%, 40% 50%, 45% 45%, 50% 40%, 55% 42%, 60% 35%, 65% 30%, 70% 32%, 75% 25%, 80% 20%, 85% 22%, 90% 15%, 95% 10%, 100% 5%, 100% 100%, 0% 100%);
-        }
-        .chart-grid {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: 
-                linear-gradient(rgba(55, 65, 81, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(55, 65, 81, 0.5) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .order-form { display: flex; flex-direction: column; gap: 16px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-label { font-size: 13px; color: var(--text-secondary); }
-        .form-input {
+        .btn-primary { background: var(--accent-blue); color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: var(--accent-green); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: var(--accent-red); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-secondary { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: var(--border-color); color: var(--text-primary); }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+        .form-input, .form-select {
+            width: 100%;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -257,77 +208,13 @@
             color: var(--text-primary);
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s;
         }
-        .form-input:focus { border-color: var(--accent-blue); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .order-type-tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-card);
-            padding: 4px;
-            border-radius: 8px;
-        }
-        .order-type-tab {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-secondary);
-        }
-        .order-type-tab.active { background: var(--accent-blue); color: white; }
-        .btn-group { display: flex; gap: 12px; }
-        .btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-buy { background: var(--accent-green); color: white; }
-        .btn-buy:hover { background: #059669; }
-        .btn-sell { background: var(--accent-red); color: white; }
-        .btn-sell:hover { background: #dc2626; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .table-container { overflow-x: auto; }
+        .form-input:focus, .form-select:focus { border-color: var(--accent-blue); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th {
-            text-align: left;
-            padding: 12px 16px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
-        }
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
-        }
-        tr:hover { background: rgba(255, 255, 255, 0.02); }
-        .ticker { display: flex; align-items: center; gap: 10px; }
-        .ticker-icon {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .ticker-icon.btc { background: #f7931a; color: white; }
-        .ticker-icon.eth { background: #627eea; color: white; }
-        .ticker-icon.sol { background: #9945ff; color: white; }
-        .ticker-name { font-weight: 600; }
-        .ticker-fullname { font-size: 12px; color: var(--text-secondary); }
-        .price-up { color: var(--accent-green); }
-        .price-down { color: var(--accent-red); }
+        th { text-align: left; padding: 12px 16px; color: var(--text-secondary); font-weight: 500; border-bottom: 1px solid var(--border-color); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+        tr:hover { background: rgba(255,255,255,0.02); }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -336,10 +223,11 @@
             font-size: 12px;
             font-weight: 500;
         }
-        .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
-        .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow); }
-        .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
-        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .badge-success { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+        .badge-danger { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+        .badge-warning { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
+        .price-up { color: var(--accent-green); }
+        .price-down { color: var(--accent-red); }
         .toast {
             position: fixed;
             bottom: 24px;
@@ -351,43 +239,101 @@
             z-index: 9999;
             animation: slideIn 0.3s ease;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .toast.success { background: var(--accent-green); color: white; }
         .toast.error { background: var(--accent-red); color: white; }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-        .reset-btn {
-            background: transparent;
+        .strategy-card {
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .strategy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .strategy-name { font-size: 16px; font-weight: 600; }
+        .strategy-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+        .strategy-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .strategy-stat { text-align: center; }
+        .strategy-stat-value { font-size: 18px; font-weight: 700; color: var(--accent-green); }
+        .strategy-stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
             cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
         }
-        .reset-btn:hover {
-            border-color: var(--accent-red);
-            color: var(--accent-red);
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
+        input:checked + .slider { background-color: var(--accent-green); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .chart-container { height: 300px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-card);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .risk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .risk-item:last-child { border-bottom: none; }
+        .risk-label { font-weight: 500; }
+        .risk-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+        .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .metric-value { font-size: 24px; font-weight: 700; }
+        .metric-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-secondary); }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-        @media (max-width: 1400px) {
+        @media (max-width: 1200px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .bottom-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 1024px) {
+            .report-grid { grid-template-columns: 1fr; }
             .sidebar { display: none; }
-            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -398,17 +344,17 @@
             <span>QuantTrade Pro</span>
         </div>
         <nav class="nav-tabs">
-            <div class="nav-tab active">交易</div>
-            <div class="nav-tab">策略</div>
-            <div class="nav-tab">回测</div>
-            <div class="nav-tab">风控</div>
-            <div class="nav-tab">报表</div>
+            <div class="nav-tab active" data-tab="trade">交易</div>
+            <div class="nav-tab" data-tab="strategy">策略</div>
+            <div class="nav-tab" data-tab="backtest">回测</div>
+            <div class="nav-tab" data-tab="risk">风控</div>
+            <div class="nav-tab" data-tab="report">报表</div>
         </nav>
         <div class="header-right">
             <span class="account-badge">模拟账户</span>
             <div class="status-indicator">
                 <span class="status-dot"></span>
-                <span>系统正常 · 延迟 12ms</span>
+                <span>系统正常</span>
             </div>
             <div class="user-avatar">D</div>
         </div>
@@ -417,105 +363,52 @@
     <div class="main-container">
         <aside class="sidebar">
             <div class="sidebar-section">
-                <div class="sidebar-title">市场</div>
-                <div class="sidebar-item active">
-                    <span class="sidebar-icon">📈</span>
-                    <span>行情看板</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">💱</span>
-                    <span>币币交易</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">📊</span>
-                    <span>合约交易</span>
-                </div>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">资产</div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">💰</span>
-                    <span>资金账户</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">📋</span>
-                    <span>持仓查询</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">📜</span>
-                    <span>历史订单</span>
-                </div>
+                <div class="sidebar-title">菜单</div>
+                <div class="sidebar-item active" data-tab="trade">📈 交易</div>
+                <div class="sidebar-item" data-tab="strategy">🤖 策略</div>
+                <div class="sidebar-item" data-tab="backtest">📊 回测</div>
+                <div class="sidebar-item" data-tab="risk">🛡️ 风控</div>
+                <div class="sidebar-item" data-tab="report">📋 报表</div>
             </div>
         </aside>
 
         <main class="content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">总资产估值</div>
-                    <div class="stat-value" id="totalAsset">$1,000,000</div>
-                    <div class="stat-change" id="totalChange">
-                        <span>—</span> 0.00%
+            <!-- 交易模块 -->
+            <div class="tab-content active" id="trade-tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">总资产估值</div>
+                        <div class="stat-value" id="totalAsset">$1,000,000</div>
+                        <div class="stat-change positive"><span>↗</span> +0.00%</div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">今日盈亏</div>
-                    <div class="stat-value" id="todayPnl" style="color: var(--text-primary);">$0</div>
-                    <div class="stat-change" id="todayChange">
-                        <span>—</span> 0.00%
+                    <div class="stat-card">
+                        <div class="stat-label">今日盈亏</div>
+                        <div class="stat-value" id="todayPnl">$0</div>
+                        <div class="stat-change"><span>—</span> 0.00%</div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">持仓市值</div>
-                    <div class="stat-value" id="positionValue">$0</div>
-                    <div class="stat-change">
-                        <span>—</span> 未持仓
+                    <div class="stat-card">
+                        <div class="stat-label">持仓市值</div>
+                        <div class="stat-value" id="positionValue">$0</div>
+                        <div class="stat-change"><span>—</span> 未持仓</div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">可用余额</div>
-                    <div class="stat-value" id="availableBalance">$1,000,000</div>
-                    <div class="stat-change">
-                        <button class="reset-btn" id="resetBtn">重置账户</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <span>BTC/USDT</span>
-                            <span id="btcPrice" style="color: var(--accent-green); font-size: 14px;">$67,234.56 ▲ 2.34%</span>
-                        </div>
-                        <div class="card-actions">
-                            <button class="btn-icon">1H</button>
-                            <button class="btn-icon">4H</button>
-                            <button class="btn-icon" style="background: var(--accent-blue); color: white;">1D</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <div class="chart-placeholder">
-                                <div class="chart-grid"></div>
-                                <div class="chart-line"></div>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">可用余额</div>
+                        <div class="stat-value" id="availableBalance">$1,000,000</div>
+                        <div class="stat-change"><button class="btn btn-secondary" onclick="resetAccount()" style="padding: 4px 12px; font-size: 12px;">重置</button></div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">快速下单</div>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">BTC/USDT 行情</div></div>
+                        <div class="card-body"><div class="chart-container">K线图占位</div></div>
                     </div>
-                    <div class="card-body">
-                        <form class="order-form" id="orderForm">
-                            <div class="order-type-tabs">
-                                <div class="order-type-tab active" data-type="limit">限价</div>
-                                <div class="order-type-tab" data-type="market">市价</div>
-                            </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">快速下单</div></div>
+                        <div class="card-body">
                             <div class="form-group">
                                 <label class="form-label">交易对</label>
-                                <select class="form-input" id="symbolSelect">
+                                <select class="form-select" id="symbolSelect">
                                     <option value="BTC">BTC/USDT</option>
                                     <option value="ETH">ETH/USDT</option>
                                     <option value="SOL">SOL/USDT</option>
@@ -523,78 +416,303 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label">价格 (USDT)</label>
-                                    <input type="number" class="form-input" id="priceInput" value="67234.56" step="0.01">
+                                    <label class="form-label">价格</label>
+                                    <input type="number" class="form-input" id="priceInput" value="67234.56">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">数量</label>
-                                    <input type="number" class="form-input" id="amountInput" placeholder="0.00" step="0.0001">
+                                    <input type="number" class="form-input" id="amountInput" placeholder="0.00">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">金额 (USDT)</label>
-                                <input type="number" class="form-input" id="totalInput" placeholder="0.00" step="0.01">
+                            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                                <button class="btn btn-success" style="flex: 1;" onclick="placeOrder('buy')">买入</button>
+                                <button class="btn btn-danger" style="flex: 1;" onclick="placeOrder('sell')">卖出</button>
                             </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-buy" id="buyBtn">买入</button>
-                                <button type="button" class="btn btn-sell" id="sellBtn">卖出</button>
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">当前持仓</div></div>
+                        <div class="card-body" style="padding: 0;">
+                            <table>
+                                <thead><tr><th>资产</th><th>数量</th><th>均价</th><th>现价</th><th>盈亏</th></tr></thead>
+                                <tbody id="positionTable"><tr><td colspan="5" class="empty-state">暂无持仓</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">最近成交</div></div>
+                        <div class="card-body" style="padding: 0;">
+                            <table>
+                                <thead><tr><th>时间</th><th>方向</th><th>价格</th><th>数量</th></tr></thead>
+                                <tbody id="tradeHistory"><tr><td colspan="4" class="empty-state">暂无成交</td></tr></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bottom-grid">
+            <!-- 策略模块 -->
+            <div class="tab-content" id="strategy-tab">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">当前持仓</div>
+                        <div class="card-title">我的策略</div>
+                        <button class="btn btn-primary" onclick="showStrategyModal()">+ 创建策略</button>
                     </div>
-                    <div class="card-body" style="padding: 0;">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>资产</th>
-                                        <th>持仓量</th>
-                                        <th>均价</th>
-                                        <th>现价</th>
-                                        <th>盈亏</th>
-                                        <th>占比</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="positionTable">
-                                    <tr>
-                                        <td colspan="6" class="empty-state">暂无持仓</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="card-body">
+                        <div id="strategyList">
+                            <div class="strategy-card">
+                                <div class="strategy-header">
+                                    <div>
+                                        <div class="strategy-name">网格交易策略 #1</div>
+                                        <div class="strategy-desc">BTC/USDT · 低频网格 · 已运行 12 天</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked onchange="toggleStrategy(this)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="strategy-stats">
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">+12.5%</div>
+                                        <div class="strategy-stat-label">累计收益</div>
+                                    </div>
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">68%</div>
+                                        <div class="strategy-stat-label">胜率</div>
+                                    </div>
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">156</div>
+                                        <div class="strategy-stat-label">交易次数</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="strategy-card">
+                                <div class="strategy-header">
+                                    <div>
+                                        <div class="strategy-name">趋势跟踪策略 #2</div>
+                                        <div class="strategy-desc">ETH/USDT · 中频趋势 · 已运行 5 天</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" onchange="toggleStrategy(this)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="strategy-stats">
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">+8.3%</div>
+                                        <div class="strategy-stat-label">累计收益</div>
+                                    </div>
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">72%</div>
+                                        <div class="strategy-stat-label">胜率</div>
+                                    </div>
+                                    <div class="strategy-stat">
+                                        <div class="strategy-stat-value">48</div>
+                                        <div class="strategy-stat-label">交易次数</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- 回测模块 -->
+            <div class="tab-content" id="backtest-tab">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">最近成交</div>
-                    </div>
-                    <div class="card-body" style="padding: 0;">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>时间</th>
-                                        <th>交易对</th>
-                                        <th>方向</th>
-                                        <th>价格</th>
-                                        <th>数量</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tradeHistory">
-                                    <tr>
-                                        <td colspan="5" class="empty-state">暂无成交记录</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="card-header"><div class="card-title">策略回测</div></div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">选择策略</label>
+                                <select class="form-select" id="backtestStrategy">
+                                    <option value="grid">网格策略</option>
+                                    <option value="trend">趋势跟踪</option>
+                                    <option value="ma">均线策略</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">交易对</label>
+                                <select class="form-select" id="backtestSymbol">
+                                    <option value="BTC">BTC/USDT</option>
+                                    <option value="ETH">ETH/USDT</option>
+                                    <option value="SOL">SOL/USDT</option>
+                                </select>
+                            </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">时间范围</label>
+                                <select class="form-select" id="backtestPeriod">
+                                    <option value="30">近30天</option>
+                                    <option value="90">近90天</option>
+                                    <option value="180">近180天</option>
+                                    <option value="365">近1年</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">初始资金 (USDT)</label>
+                                <input type="number" class="form-input" id="backtestCapital" value="100000">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="runBacktest()" style="margin-top: 10px;">开始回测</button>
+                    </div>
+                </div>
+
+                <div class="card" id="backtestResult" style="display: none;">
+                    <div class="card-header"><div class="card-title">回测结果</div></div>
+                    <div class="card-body">
+                        <div class="report-grid">
+                            <div class="metric-card">
+                                <div class="metric-value" style="color: var(--accent-green);">+24.56%</div>
+                                <div class="metric-label">总收益率</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">1.85</div>
+                                <div class="metric-label">夏普比率</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">-8.2%</div>
+                                <div class="metric-label">最大回撤</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">64%</div>
+                                <div class="metric-label">胜率</div>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="margin-top: 20px;">收益曲线图占位</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 风控模块 -->
+            <div class="tab-content" id="risk-tab">
+                <div class="card">
+                    <div class="card-header"><div class="card-title">风险控制设置</div></div>
+                    <div class="card-body">
+                        <div class="risk-item">
+                            <div>
+                                <div class="risk-label">单笔止损</div>
+                                <div class="risk-desc">单笔交易亏损超过设定比例时自动平仓</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="number" class="form-input" value="5" style="width: 80px; text-align: center;">
+                                <span>%</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="risk-item">
+                            <div>
+                                <div class="risk-label">日累计止损</div>
+                                <div class="risk-desc">当日累计亏损超过设定比例时停止交易</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="number" class="form-input" value="10" style="width: 80px; text-align: center;">
+                                <span>%</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="risk-item">
+                            <div>
+                                <div class="risk-label">单币种仓位限制</div>
+                                <div class="risk-desc">单个币种持仓不超过总资产的比例</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="number" class="form-input" value="50" style="width: 80px; text-align: center;">
+                                <span>%</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="risk-item">
+                            <div>
+                                <div class="risk-label">总仓位限制</div>
+                                <div class="risk-desc">所有持仓不超过总资产的比例</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="number" class="form-input" value="80" style="width: 80px; text-align: center;">
+                                <span>%</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="risk-item">
+                            <div>
+                                <div class="risk-label">风险预警通知</div>
+                                <div class="risk-desc">触发风控条件时发送通知</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报表模块 -->
+            <div class="tab-content" id="report-tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">总收益率</div>
+                        <div class="stat-value" style="color: var(--accent-green);">+24.56%</div>
+                        <div class="stat-change positive"><span>↗</span> 跑赢大盘 15%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">年化收益率</div>
+                        <div class="stat-value" style="color: var(--accent-green);">+156.8%</div>
+                        <div class="stat-change positive"><span>↗</span> 本月 +12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">夏普比率</div>
+                        <div class="stat-value">1.85</div>
+                        <div class="stat-change"><span>—</span> 风险调整后收益良好</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最大回撤</div>
+                        <div class="stat-value" style="color: var(--accent-red);">-8.2%</div>
+                        <div class="stat-change negative"><span>↘</span> 控制在目标范围内</div>
+                    </div>
+                </div>
+
+                <div class="report-grid">
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">收益曲线</div></div>
+                        <div class="card-body"><div class="chart-container">收益曲线图</div></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">资产分布</div></div>
+                        <div class="card-body"><div class="chart-container">饼图占位</div></div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header"><div class="card-title">月度收益统计</div></div>
+                    <div class="card-body" style="padding: 0;">
+                        <table>
+                            <thead>
+                                <tr><th>月份</th><th>收益率</th><th>盈亏额</th><th>交易次数</th><th>胜率</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2026-02</td><td class="price-up">+8.5%</td><td class="price-up">+$85,000</td><td>45</td><td>68%</td></tr>
+                                <tr><td>2026-01</td><td class="price-up">+12.3%</td><td class="price-up">+$123,000</td><td>52</td><td>71%</td></tr>
+                                <tr><td>2025-12</td><td class="price-down">-2.1%</td><td class="price-down">-$21,000</td><td>38</td><td>55%</td></tr>
+                                <tr><td>2025-11</td><td class="price-up">+5.8%</td><td class="price-up">+$58,000</td><td>41</td><td>62%</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -602,145 +720,61 @@
     </div>
 
     <script>
-        // 模拟价格数据
-        const prices = {
-            BTC: { price: 67234.56, change: 2.34 },
-            ETH: { price: 3521.89, change: 1.85 },
-            SOL: { price: 112.34, change: -0.52 }
-        };
-
-        // 账户数据
-        let account = {
-            balance: 1000000,
-            positions: {},
-            trades: [],
-            initialBalance: 1000000
-        };
-
-        // 手续费率
+        // 价格数据
+        const prices = { BTC: 67234.56, ETH: 3521.89, SOL: 112.34 };
+        let account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
         const FEE_RATE = 0.001;
 
-        // 加载本地数据
+        // 加载数据
         function loadData() {
             const saved = localStorage.getItem('quantAccount');
-            if (saved) {
-                account = JSON.parse(saved);
-            }
+            if (saved) account = JSON.parse(saved);
             updateUI();
         }
-
-        // 保存数据
-        function saveData() {
-            localStorage.setItem('quantAccount', JSON.stringify(account));
-        }
-
-        // 重置账户
-        function resetAccount() {
-            if (confirm('确定要重置模拟账户吗？所有持仓和交易记录将被清空。')) {
-                account = {
-                    balance: 1000000,
-                    positions: {},
-                    trades: [],
-                    initialBalance: 1000000
-                };
-                saveData();
-                updateUI();
-                showToast('账户已重置', 'success');
-            }
-        }
+        function saveData() { localStorage.setItem('quantAccount', JSON.stringify(account)); }
 
         // 更新UI
         function updateUI() {
-            const positionValue = calculatePositionValue();
+            let positionValue = 0;
+            for (const [sym, pos] of Object.entries(account.positions)) {
+                positionValue += pos.amount * prices[sym];
+            }
             const totalAsset = account.balance + positionValue;
-            const todayPnl = totalAsset - account.initialBalance;
-            const todayChange = account.initialBalance > 0 ? (todayPnl / account.initialBalance * 100) : 0;
-
-            document.getElementById('totalAsset').textContent = formatMoney(totalAsset);
-            document.getElementById('todayPnl').textContent = formatMoney(todayPnl);
-            document.getElementById('todayPnl').style.color = todayPnl >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-            document.getElementById('todayChange').innerHTML = `<span>${todayPnl >= 0 ? '↗' : '↘'}</span> ${todayChange.toFixed(2)}%`;
-            document.getElementById('todayChange').className = `stat-change ${todayPnl >= 0 ? 'positive' : 'negative'}`;
-            document.getElementById('positionValue').textContent = formatMoney(positionValue);
-            document.getElementById('availableBalance').textContent = formatMoney(account.balance);
-
+            document.getElementById('totalAsset').textContent = '$' + totalAsset.toLocaleString('en-US', {maximumFractionDigits: 2});
+            document.getElementById('todayPnl').textContent = '$' + (totalAsset - account.initialBalance).toFixed(2);
+            document.getElementById('positionValue').textContent = '$' + positionValue.toFixed(2);
+            document.getElementById('availableBalance').textContent = '$' + account.balance.toLocaleString('en-US', {maximumFractionDigits: 2});
             updatePositionTable();
             updateTradeHistory();
-        }
-
-        // 计算持仓市值
-        function calculatePositionValue() {
-            let value = 0;
-            for (const [symbol, pos] of Object.entries(account.positions)) {
-                value += pos.amount * prices[symbol].price;
-            }
-            return value;
         }
 
         // 更新持仓表
         function updatePositionTable() {
             const tbody = document.getElementById('positionTable');
             const symbols = Object.keys(account.positions);
-            
             if (symbols.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">暂无持仓</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">暂无持仓</td></tr>';
                 return;
             }
-
-            const positionValue = calculatePositionValue();
-            const totalAsset = account.balance + positionValue;
-
-            tbody.innerHTML = symbols.map(symbol => {
-                const pos = account.positions[symbol];
-                const currentPrice = prices[symbol].price;
-                const marketValue = pos.amount * currentPrice;
-                const pnl = marketValue - pos.cost;
-                const pnlPercent = (pnl / pos.cost * 100);
-                const ratio = totalAsset > 0 ? (marketValue / totalAsset * 100) : 0;
-                const iconClass = symbol.toLowerCase();
-                const fullName = { BTC: 'Bitcoin', ETH: 'Ethereum', SOL: 'Solana' }[symbol];
-
-                return `
-                    <tr>
-                        <td>
-                            <div class="ticker">
-                                <div class="ticker-icon ${iconClass}">${symbol[0]}</div>
-                                <div>
-                                    <div class="ticker-name">${symbol}</div>
-                                    <div class="ticker-fullname">${fullName}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${pos.amount.toFixed(4)} ${symbol}</td>
-                        <td>$${pos.avgPrice.toFixed(2)}</td>
-                        <td>$${currentPrice.toFixed(2)}</td>
-                        <td class="${pnl >= 0 ? 'price-up' : 'price-down'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent.toFixed(2)}%)</td>
-                        <td>${ratio.toFixed(1)}%</td>
-                    </tr>
-                `;
+            tbody.innerHTML = symbols.map(sym => {
+                const pos = account.positions[sym];
+                const currentPrice = prices[sym];
+                const pnl = (currentPrice - pos.avgPrice) * pos.amount;
+                const pnlPct = (pnl / pos.cost * 100);
+                return `<tr><td><strong>${sym}</strong></td><td>${pos.amount.toFixed(4)}</td><td>$${pos.avgPrice.toFixed(2)}</td><td>$${currentPrice.toFixed(2)}</td><td class="${pnl >= 0 ? 'price-up' : 'price-down'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPct.toFixed(2)}%)</td></tr>`;
             }).join('');
         }
 
         // 更新交易历史
         function updateTradeHistory() {
             const tbody = document.getElementById('tradeHistory');
-            
             if (account.trades.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">暂无成交记录</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">暂无成交</td></tr>';
                 return;
             }
-
-            tbody.innerHTML = account.trades.slice(-10).reverse().map(trade => {
-                const time = new Date(trade.time).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                return `
-                    <tr>
-                        <td>${time}</td>
-                        <td>${trade.symbol}/USDT</td>
-                        <td class="${trade.side === 'buy' ? 'price-up' : 'price-down'}">${trade.side === 'buy' ? '买入' : '卖出'}</td>
-                        <td>$${trade.price.toFixed(2)}</td>
-                        <td>${trade.amount.toFixed(4)}</td>
-                    </tr>
-                `;
+            tbody.innerHTML = account.trades.slice(-10).reverse().map(t => {
+                const time = new Date(t.time).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+                return `<tr><td>${time}</td><td class="${t.side === 'buy' ? 'price-up' : 'price-down'}">${t.side === 'buy' ? '买入' : '卖出'}</td><td>$${t.price.toFixed(2)}</td><td>${t.amount.toFixed(4)}</td></tr>`;
             }).join('');
         }
 
@@ -749,137 +783,101 @@
             const symbol = document.getElementById('symbolSelect').value;
             const price = parseFloat(document.getElementById('priceInput').value);
             const amount = parseFloat(document.getElementById('amountInput').value);
-
-            if (!price || !amount || amount <= 0) {
-                showToast('请输入有效的价格和数量', 'error');
-                return;
-            }
-
+            if (!price || !amount || amount <= 0) { showToast('请输入有效的价格和数量', 'error'); return; }
             const total = price * amount;
             const fee = total * FEE_RATE;
-            const totalWithFee = side === 'buy' ? total + fee : total - fee;
-
             if (side === 'buy') {
-                if (totalWithFee > account.balance) {
-                    showToast('可用余额不足', 'error');
-                    return;
-                }
-
-                account.balance -= totalWithFee;
-
+                if (total + fee > account.balance) { showToast('余额不足', 'error'); return; }
+                account.balance -= (total + fee);
                 if (account.positions[symbol]) {
                     const pos = account.positions[symbol];
-                    const newCost = pos.cost + total;
+                    pos.cost += total;
                     pos.amount += amount;
-                    pos.avgPrice = newCost / pos.amount;
-                    pos.cost = newCost;
+                    pos.avgPrice = pos.cost / pos.amount;
                 } else {
-                    account.positions[symbol] = {
-                        amount: amount,
-                        avgPrice: price,
-                        cost: total
-                    };
+                    account.positions[symbol] = { amount: amount, avgPrice: price, cost: total };
                 }
-
-                showToast(`成功买入 ${amount.toFixed(4)} ${symbol}`, 'success');
+                showToast(`买入 ${amount.toFixed(4)} ${symbol}`, 'success');
             } else {
-                if (!account.positions[symbol] || account.positions[symbol].amount < amount) {
-                    showToast('持仓不足', 'error');
-                    return;
-                }
-
-                account.balance += totalWithFee;
-
+                if (!account.positions[symbol] || account.positions[symbol].amount < amount) { showToast('持仓不足', 'error'); return; }
+                account.balance += (total - fee);
                 const pos = account.positions[symbol];
                 pos.amount -= amount;
                 pos.cost = pos.amount * pos.avgPrice;
-
-                if (pos.amount <= 0.0001) {
-                    delete account.positions[symbol];
-                }
-
-                showToast(`成功卖出 ${amount.toFixed(4)} ${symbol}`, 'success');
+                if (pos.amount <= 0.0001) delete account.positions[symbol];
+                showToast(`卖出 ${amount.toFixed(4)} ${symbol}`, 'success');
             }
-
-            // 记录交易
-            account.trades.push({
-                time: Date.now(),
-                symbol: symbol,
-                side: side,
-                price: price,
-                amount: amount,
-                fee: fee
-            });
-
-            // 清空输入
+            account.trades.push({ time: Date.now(), symbol, side, price, amount, fee });
             document.getElementById('amountInput').value = '';
-            document.getElementById('totalInput').value = '';
-
             saveData();
             updateUI();
         }
 
+        // 重置账户
+        function resetAccount() {
+            if (confirm('确定重置账户？所有数据将清空。')) {
+                account = { balance: 1000000, positions: {}, trades: [], initialBalance: 1000000 };
+                saveData();
+                updateUI();
+                showToast('账户已重置', 'success');
+            }
+        }
+
         // 显示提示
-        function showToast(message, type) {
+        function showToast(msg, type) {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.textContent = message;
+            toast.textContent = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // 格式化金额
-        function formatMoney(value) {
-            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        // 切换交易对
-        document.getElementById('symbolSelect').addEventListener('change', function() {
-            const symbol = this.value;
-            const price = prices[symbol].price;
-            document.getElementById('priceInput').value = price.toFixed(2);
-            document.getElementById('btcPrice').textContent = `$${price.toFixed(2)} ${prices[symbol].change >= 0 ? '▲' : '▼'} ${Math.abs(prices[symbol].change).toFixed(2)}%`;
-            document.getElementById('btcPrice').style.color = prices[symbol].change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-        });
-
-        // 数量变化时计算金额
-        document.getElementById('amountInput').addEventListener('input', function() {
-            const price = parseFloat(document.getElementById('priceInput').value) || 0;
-            const amount = parseFloat(this.value) || 0;
-            document.getElementById('totalInput').value = (price * amount).toFixed(2);
-        });
-
-        // 金额变化时计算数量
-        document.getElementById('totalInput').addEventListener('input', function() {
-            const price = parseFloat(document.getElementById('priceInput').value) || 0;
-            const total = parseFloat(this.value) || 0;
-            if (price > 0) {
-                document.getElementById('amountInput').value = (total / price).toFixed(4);
-            }
-        });
-
-        // 切换订单类型
-        document.querySelectorAll('.order-type-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.order-type-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+        // 标签切换
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                const tabName = tab.dataset.tab;
+                document.getElementById(tabName + '-tab').classList.add('active');
+                document.querySelector(`.sidebar-item[data-tab="${tabName}"]`).classList.add('active');
             });
         });
 
-        // 绑定买入按钮
-        document.getElementById('buyBtn').addEventListener('click', function() {
-            placeOrder('buy');
+        // 侧边栏切换
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+                const tabName = item.dataset.tab;
+                item.classList.add('active');
+                document.getElementById(tabName + '-tab').classList.add('active');
+                document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
+            });
         });
 
-        // 绑定卖出按钮
-        document.getElementById('sellBtn').addEventListener('click', function() {
-            placeOrder('sell');
+        // 切换交易对
+        document.getElementById('symbolSelect').addEventListener('change', function() {
+            document.getElementById('priceInput').value = prices[this.value].toFixed(2);
         });
 
-        // 绑定重置按钮
-        document.getElementById('resetBtn').addEventListener('click', function() {
-            resetAccount();
-        });
+        // 运行回测
+        function runBacktest() {
+            document.getElementById('backtestResult').style.display = 'block';
+            showToast('回测完成', 'success');
+        }
+
+        // 切换策略
+        function toggleStrategy(checkbox) {
+            showToast(checkbox.checked ? '策略已启动' : '策略已停止', 'success');
+        }
+
+        // 创建策略
+        function showStrategyModal() {
+            showToast('策略创建功能开发中', 'error');
+        }
 
         // 初始化
         loadData();
