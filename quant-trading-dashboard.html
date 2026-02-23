@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuantTrade Pro - 量化交易系统</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-primary: #0a0e17;
             --bg-secondary: #111827;
@@ -23,7 +18,6 @@
             --accent-blue: #3b82f6;
             --accent-yellow: #f59e0b;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--bg-primary);
@@ -31,8 +25,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
-        /* Header */
         .header {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
@@ -42,12 +34,9 @@
             align-items: center;
             justify-content: space-between;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -56,10 +45,8 @@
             font-weight: 700;
             color: var(--accent-blue);
         }
-
         .logo-icon {
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             background: linear-gradient(135deg, var(--accent-blue), #8b5cf6);
             border-radius: 8px;
             display: flex;
@@ -67,12 +54,7 @@
             justify-content: center;
             font-size: 16px;
         }
-
-        .nav-tabs {
-            display: flex;
-            gap: 4px;
-        }
-
+        .nav-tabs { display: flex; gap: 4px; }
         .nav-tab {
             padding: 8px 16px;
             border-radius: 6px;
@@ -81,23 +63,9 @@
             color: var(--text-secondary);
             transition: all 0.2s;
         }
-
-        .nav-tab:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .nav-tab.active {
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
+        .nav-tab:hover { background: var(--bg-card); color: var(--text-primary); }
+        .nav-tab.active { background: var(--accent-blue); color: white; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
         .status-indicator {
             display: flex;
             align-items: center;
@@ -105,23 +73,15 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             background: var(--accent-green);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             background: linear-gradient(135deg, var(--accent-blue), #8b5cf6);
             border-radius: 50%;
             display: flex;
@@ -131,15 +91,19 @@
             font-weight: 600;
             cursor: pointer;
         }
-
-        /* Main Layout */
+        .account-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-yellow);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
         .main-container {
             padding-top: 60px;
             display: flex;
             height: 100vh;
         }
-
-        /* Sidebar */
         .sidebar {
             width: 240px;
             background: var(--bg-secondary);
@@ -147,11 +111,7 @@
             padding: 20px 0;
             overflow-y: auto;
         }
-
-        .sidebar-section {
-            padding: 0 16px 20px;
-        }
-
+        .sidebar-section { padding: 0 16px 20px; }
         .sidebar-title {
             font-size: 11px;
             font-weight: 600;
@@ -161,7 +121,6 @@
             margin-bottom: 12px;
             padding: 0 8px;
         }
-
         .sidebar-item {
             display: flex;
             align-items: center;
@@ -174,41 +133,19 @@
             transition: all 0.2s;
             margin-bottom: 4px;
         }
-
-        .sidebar-item:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
+        .sidebar-item:hover { background: var(--bg-card); color: var(--text-primary); }
         .sidebar-item.active {
             background: rgba(59, 130, 246, 0.15);
             color: var(--accent-blue);
         }
-
-        .sidebar-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Content Area */
-        .content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            background: var(--bg-primary);
-        }
-
-        /* Stats Cards */
+        .sidebar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        .content { flex: 1; padding: 24px; overflow-y: auto; background: var(--bg-primary); }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 24px;
         }
-
         .stat-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -216,12 +153,10 @@
             padding: 20px;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
-
         .stat-label {
             font-size: 13px;
             color: var(--text-secondary);
@@ -230,44 +165,32 @@
             align-items: center;
             gap: 6px;
         }
-
         .stat-value {
             font-size: 28px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
         }
-
         .stat-change {
             font-size: 13px;
             display: flex;
             align-items: center;
             gap: 4px;
         }
-
-        .stat-change.positive {
-            color: var(--accent-green);
-        }
-
-        .stat-change.negative {
-            color: var(--accent-red);
-        }
-
-        /* Main Grid */
+        .stat-change.positive { color: var(--accent-green); }
+        .stat-change.negative { color: var(--accent-red); }
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
             margin-bottom: 20px;
         }
-
         .card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
         }
-
         .card-header {
             padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
@@ -275,7 +198,6 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .card-title {
             font-size: 16px;
             font-weight: 600;
@@ -283,15 +205,9 @@
             align-items: center;
             gap: 8px;
         }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
-
+        .card-actions { display: flex; gap: 8px; }
         .btn-icon {
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             border: none;
             background: var(--bg-card);
             color: var(--text-secondary);
@@ -302,25 +218,11 @@
             justify-content: center;
             transition: all 0.2s;
         }
-
-        .btn-icon:hover {
-            background: var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        /* Chart Area */
-        .chart-container {
-            height: 320px;
-            position: relative;
-        }
-
+        .btn-icon:hover { background: var(--border-color); color: var(--text-primary); }
+        .card-body { padding: 20px; }
+        .chart-container { height: 320px; position: relative; }
         .chart-placeholder {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
             border-radius: 8px;
             display: flex;
@@ -329,52 +231,24 @@
             position: relative;
             overflow: hidden;
         }
-
         .chart-line {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             height: 60%;
             background: linear-gradient(180deg, rgba(16, 185, 129, 0.3) 0%, transparent 100%);
-            clip-path: polygon(
-                0% 80%, 5% 75%, 10% 70%, 15% 72%, 20% 65%, 25% 60%, 30% 55%,
-                35% 58%, 40% 50%, 45% 45%, 50% 40%, 55% 42%, 60% 35%, 65% 30%,
-                70% 32%, 75% 25%, 80% 20%, 85% 22%, 90% 15%, 95% 10%, 100% 5%,
-                100% 100%, 0% 100%
-            );
+            clip-path: polygon(0% 80%, 5% 75%, 10% 70%, 15% 72%, 20% 65%, 25% 60%, 30% 55%, 35% 58%, 40% 50%, 45% 45%, 50% 40%, 55% 42%, 60% 35%, 65% 30%, 70% 32%, 75% 25%, 80% 20%, 85% 22%, 90% 15%, 95% 10%, 100% 5%, 100% 100%, 0% 100%);
         }
-
         .chart-grid {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-image: 
                 linear-gradient(rgba(55, 65, 81, 0.5) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(55, 65, 81, 0.5) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-
-        /* Order Panel */
-        .order-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
+        .order-form { display: flex; flex-direction: column; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 13px; color: var(--text-secondary); }
         .form-input {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -385,17 +259,8 @@
             outline: none;
             transition: border-color 0.2s;
         }
-
-        .form-input:focus {
-            border-color: var(--accent-blue);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        .form-input:focus { border-color: var(--accent-blue); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .order-type-tabs {
             display: flex;
             gap: 4px;
@@ -403,7 +268,6 @@
             padding: 4px;
             border-radius: 8px;
         }
-
         .order-type-tab {
             flex: 1;
             padding: 8px;
@@ -414,17 +278,8 @@
             transition: all 0.2s;
             color: var(--text-secondary);
         }
-
-        .order-type-tab.active {
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-        }
-
+        .order-type-tab.active { background: var(--accent-blue); color: white; }
+        .btn-group { display: flex; gap: 12px; }
         .btn {
             flex: 1;
             padding: 14px;
@@ -435,36 +290,13 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .btn-buy {
-            background: var(--accent-green);
-            color: white;
-        }
-
-        .btn-buy:hover {
-            background: #059669;
-        }
-
-        .btn-sell {
-            background: var(--accent-red);
-            color: white;
-        }
-
-        .btn-sell:hover {
-            background: #dc2626;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
+        .btn-buy { background: var(--accent-green); color: white; }
+        .btn-buy:hover { background: #059669; }
+        .btn-sell { background: var(--accent-red); color: white; }
+        .btn-sell:hover { background: #dc2626; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th {
             text-align: left;
             padding: 12px 16px;
@@ -473,26 +305,15 @@
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
         }
-
         td {
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
         }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .ticker {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .ticker { display: flex; align-items: center; gap: 10px; }
         .ticker-icon {
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -500,39 +321,13 @@
             font-size: 12px;
             font-weight: 700;
         }
-
-        .ticker-icon.btc {
-            background: #f7931a;
-            color: white;
-        }
-
-        .ticker-icon.eth {
-            background: #627eea;
-            color: white;
-        }
-
-        .ticker-icon.sol {
-            background: #9945ff;
-            color: white;
-        }
-
-        .ticker-name {
-            font-weight: 600;
-        }
-
-        .ticker-fullname {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .price-up {
-            color: var(--accent-green);
-        }
-
-        .price-down {
-            color: var(--accent-red);
-        }
-
+        .ticker-icon.btc { background: #f7931a; color: white; }
+        .ticker-icon.eth { background: #627eea; color: white; }
+        .ticker-icon.sol { background: #9945ff; color: white; }
+        .ticker-name { font-weight: 600; }
+        .ticker-fullname { font-size: 12px; color: var(--text-secondary); }
+        .price-up { color: var(--accent-green); }
+        .price-down { color: var(--accent-red); }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -541,73 +336,62 @@
             font-size: 12px;
             font-weight: 500;
         }
-
-        .badge-success {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow); }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
         }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-yellow);
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
-
-        .badge-danger {
-            background: rgba(239, 68, 68, 0.15);
+        .toast.success { background: var(--accent-green); color: white; }
+        .toast.error { background: var(--accent-red); color: white; }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            border-color: var(--accent-red);
             color: var(--accent-red);
         }
-
-        /* Bottom Grid */
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-
-        /* Responsive */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
         @media (max-width: 1400px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .bottom-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .bottom-grid { grid-template-columns: 1fr; }
         }
-
         @media (max-width: 1024px) {
-            .sidebar {
-                display: none;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .sidebar { display: none; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="logo">
             <div class="logo-icon">Q</div>
@@ -621,6 +405,7 @@
             <div class="nav-tab">报表</div>
         </nav>
         <div class="header-right">
+            <span class="account-badge">模拟账户</span>
             <div class="status-indicator">
                 <span class="status-dot"></span>
                 <span>系统正常 · 延迟 12ms</span>
@@ -629,9 +414,7 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="main-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-title">市场</div>
@@ -646,25 +429,6 @@
                 <div class="sidebar-item">
                     <span class="sidebar-icon">📊</span>
                     <span>合约交易</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">⚡</span>
-                    <span>闪电交易</span>
-                </div>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">策略</div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">🤖</span>
-                    <span>我的策略</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">🧪</span>
-                    <span>策略回测</span>
-                </div>
-                <div class="sidebar-item">
-                    <span class="sidebar-icon">🏪</span>
-                    <span>策略市场</span>
                 </div>
             </div>
             <div class="sidebar-section">
@@ -684,54 +448,49 @@
             </div>
         </aside>
 
-        <!-- Content -->
         <main class="content">
-            <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">总资产估值</div>
-                    <div class="stat-value">$1,284,592</div>
-                    <div class="stat-change positive">
-                        <span>↗</span> +5.23% (+$63,842)
+                    <div class="stat-value" id="totalAsset">$1,000,000</div>
+                    <div class="stat-change" id="totalChange">
+                        <span>—</span> 0.00%
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">今日盈亏</div>
-                    <div class="stat-value" style="color: var(--accent-green);">+$12,456</div>
-                    <div class="stat-change positive">
-                        <span>↗</span> +0.98%
+                    <div class="stat-value" id="todayPnl" style="color: var(--text-primary);">$0</div>
+                    <div class="stat-change" id="todayChange">
+                        <span>—</span> 0.00%
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">持仓市值</div>
-                    <div class="stat-value">$892,341</div>
-                    <div class="stat-change positive">
-                        <span>↗</span> +2.15%
+                    <div class="stat-value" id="positionValue">$0</div>
+                    <div class="stat-change">
+                        <span>—</span> 未持仓
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">可用余额</div>
-                    <div class="stat-value">$392,251</div>
+                    <div class="stat-value" id="availableBalance">$1,000,000</div>
                     <div class="stat-change">
-                        <span>—</span> 未变动
+                        <button class="reset-btn" onclick="resetAccount()">重置账户</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Dashboard Grid -->
             <div class="dashboard-grid">
-                <!-- Chart Card -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
                             <span>BTC/USDT</span>
-                            <span style="color: var(--accent-green); font-size: 14px;">$67,234.56 ▲ 2.34%</span>
+                            <span id="btcPrice" style="color: var(--accent-green); font-size: 14px;">$67,234.56 ▲ 2.34%</span>
                         </div>
                         <div class="card-actions">
                             <button class="btn-icon">1H</button>
                             <button class="btn-icon">4H</button>
                             <button class="btn-icon" style="background: var(--accent-blue); color: white;">1D</button>
-                            <button class="btn-icon">1W</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -744,54 +503,51 @@
                     </div>
                 </div>
 
-                <!-- Order Panel -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">快速下单</div>
                     </div>
                     <div class="card-body">
-                        <form class="order-form">
+                        <form class="order-form" id="orderForm">
                             <div class="order-type-tabs">
-                                <div class="order-type-tab active">限价</div>
-                                <div class="order-type-tab">市价</div>
-                                <div class="order-type-tab">条件单</div>
+                                <div class="order-type-tab active" data-type="limit">限价</div>
+                                <div class="order-type-tab" data-type="market">市价</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">交易对</label>
-                                <input type="text" class="form-input" value="BTC/USDT">
+                                <select class="form-input" id="symbolSelect">
+                                    <option value="BTC">BTC/USDT</option>
+                                    <option value="ETH">ETH/USDT</option>
+                                    <option value="SOL">SOL/USDT</option>
+                                </select>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">价格 (USDT)</label>
-                                    <input type="text" class="form-input" value="67,234.56">
+                                    <input type="number" class="form-input" id="priceInput" value="67234.56" step="0.01">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">数量 (BTC)</label>
-                                    <input type="text" class="form-input" placeholder="0.00">
+                                    <label class="form-label">数量</label>
+                                    <input type="number" class="form-input" id="amountInput" placeholder="0.00" step="0.0001">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">金额 (USDT)</label>
-                                <input type="text" class="form-input" placeholder="0.00">
+                                <input type="number" class="form-input" id="totalInput" placeholder="0.00" step="0.01">
                             </div>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-buy">买入 BTC</button>
-                                <button type="button" class="btn btn-sell">卖出 BTC</button>
+                                <button type="button" class="btn btn-buy" onclick="placeOrder('buy')">买入</button>
+                                <button type="button" class="btn btn-sell" onclick="placeOrder('sell')">卖出</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Bottom Grid -->
             <div class="bottom-grid">
-                <!-- Positions Table -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">当前持仓</div>
-                        <div class="card-actions">
-                            <button class="btn-icon">⚙️</button>
-                        </div>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <div class="table-container">
@@ -806,54 +562,9 @@
                                         <th>占比</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="positionTable">
                                     <tr>
-                                        <td>
-                                            <div class="ticker">
-                                                <div class="ticker-icon btc">₿</div>
-                                                <div>
-                                                    <div class="ticker-name">BTC</div>
-                                                    <div class="ticker-fullname">Bitcoin</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>2.456 BTC</td>
-                                        <td>$62,341.23</td>
-                                        <td>$67,234.56</td>
-                                        <td class="price-up">+$12,023 (+7.85%)</td>
-                                        <td>45.2%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ticker">
-                                                <div class="ticker-icon eth">Ξ</div>
-                                                <div>
-                                                    <div class="ticker-name">ETH</div>
-                                                    <div class="ticker-fullname">Ethereum</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>15.82 ETH</td>
-                                        <td>$3,245.67</td>
-                                        <td>$3,521.89</td>
-                                        <td class="price-up">+$4,368 (+8.51%)</td>
-                                        <td>28.6%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ticker">
-                                                <div class="ticker-icon sol">S</div>
-                                                <div>
-                                                    <div class="ticker-name">SOL</div>
-                                                    <div class="ticker-fullname">Solana</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>245.6 SOL</td>
-                                        <td>$98.45</td>
-                                        <td>$112.34</td>
-                                        <td class="price-up">+$3,412 (+14.1%)</td>
-                                        <td>15.8%</td>
+                                        <td colspan="6" class="empty-state">暂无持仓</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -861,61 +572,25 @@
                     </div>
                 </div>
 
-                <!-- Active Strategies -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">运行中的策略</div>
-                        <div class="card-actions">
-                            <button class="btn-icon">+</button>
-                        </div>
+                        <div class="card-title">最近成交</div>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <div class="table-container">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>策略名称</th>
+                                        <th>时间</th>
                                         <th>交易对</th>
-                                        <th>今日盈亏</th>
-                                        <th>状态</th>
+                                        <th>方向</th>
+                                        <th>价格</th>
+                                        <th>数量</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tradeHistory">
                                     <tr>
-                                        <td>
-                                            <div class="ticker-name">网格策略 #1</div>
-                                            <div class="ticker-fullname">BTC/USDT · 低频</div>
-                                        </td>
-                                        <td>BTC/USDT</td>
-                                        <td class="price-up">+$1,234</td>
-                                        <td><span class="badge badge-success">运行中</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ticker-name">趋势跟踪 #3</div>
-                                            <div class="ticker-fullname">ETH/USDT · 中频</div>
-                                        </td>
-                                        <td>ETH/USDT</td>
-                                        <td class="price-up">+$856</td>
-                                        <td><span class="badge badge-success">运行中</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ticker-name">套利策略 #2</div>
-                                            <div class="ticker-fullname">多币种 · 高频</div>
-                                        </td>
-                                        <td>Multi</td>
-                                        <td class="price-down">-$123</td>
-                                        <td><span class="badge badge-warning">监控中</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ticker-name">均值回归 #1</div>
-                                            <div class="ticker-fullname">SOL/USDT · 低频</div>
-                                        </td>
-                                        <td>SOL/USDT</td>
-                                        <td class="price-up">+$445</td>
-                                        <td><span class="badge badge-success">运行中</span></td>
+                                        <td colspan="5" class="empty-state">暂无成交记录</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -925,5 +600,274 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // 模拟价格数据
+        const prices = {
+            BTC: { price: 67234.56, change: 2.34 },
+            ETH: { price: 3521.89, change: 1.85 },
+            SOL: { price: 112.34, change: -0.52 }
+        };
+
+        // 账户数据
+        let account = {
+            balance: 1000000,
+            positions: {},
+            trades: [],
+            initialBalance: 1000000
+        };
+
+        // 手续费率
+        const FEE_RATE = 0.001;
+
+        // 加载本地数据
+        function loadData() {
+            const saved = localStorage.getItem('quantAccount');
+            if (saved) {
+                account = JSON.parse(saved);
+            }
+            updateUI();
+        }
+
+        // 保存数据
+        function saveData() {
+            localStorage.setItem('quantAccount', JSON.stringify(account));
+        }
+
+        // 重置账户
+        function resetAccount() {
+            if (confirm('确定要重置模拟账户吗？所有持仓和交易记录将被清空。')) {
+                account = {
+                    balance: 1000000,
+                    positions: {},
+                    trades: [],
+                    initialBalance: 1000000
+                };
+                saveData();
+                updateUI();
+                showToast('账户已重置', 'success');
+            }
+        }
+
+        // 更新UI
+        function updateUI() {
+            const positionValue = calculatePositionValue();
+            const totalAsset = account.balance + positionValue;
+            const todayPnl = totalAsset - account.initialBalance;
+            const todayChange = account.initialBalance > 0 ? (todayPnl / account.initialBalance * 100) : 0;
+
+            document.getElementById('totalAsset').textContent = formatMoney(totalAsset);
+            document.getElementById('todayPnl').textContent = formatMoney(todayPnl);
+            document.getElementById('todayPnl').style.color = todayPnl >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('todayChange').innerHTML = `<span>${todayPnl >= 0 ? '↗' : '↘'}</span> ${todayChange.toFixed(2)}%`;
+            document.getElementById('todayChange').className = `stat-change ${todayPnl >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('positionValue').textContent = formatMoney(positionValue);
+            document.getElementById('availableBalance').textContent = formatMoney(account.balance);
+
+            updatePositionTable();
+            updateTradeHistory();
+        }
+
+        // 计算持仓市值
+        function calculatePositionValue() {
+            let value = 0;
+            for (const [symbol, pos] of Object.entries(account.positions)) {
+                value += pos.amount * prices[symbol].price;
+            }
+            return value;
+        }
+
+        // 更新持仓表
+        function updatePositionTable() {
+            const tbody = document.getElementById('positionTable');
+            const symbols = Object.keys(account.positions);
+            
+            if (symbols.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">暂无持仓</td></tr>';
+                return;
+            }
+
+            const positionValue = calculatePositionValue();
+            const totalAsset = account.balance + positionValue;
+
+            tbody.innerHTML = symbols.map(symbol => {
+                const pos = account.positions[symbol];
+                const currentPrice = prices[symbol].price;
+                const marketValue = pos.amount * currentPrice;
+                const pnl = marketValue - pos.cost;
+                const pnlPercent = (pnl / pos.cost * 100);
+                const ratio = totalAsset > 0 ? (marketValue / totalAsset * 100) : 0;
+                const iconClass = symbol.toLowerCase();
+                const fullName = { BTC: 'Bitcoin', ETH: 'Ethereum', SOL: 'Solana' }[symbol];
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="ticker">
+                                <div class="ticker-icon ${iconClass}">${symbol[0]}</div>
+                                <div>
+                                    <div class="ticker-name">${symbol}</div>
+                                    <div class="ticker-fullname">${fullName}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${pos.amount.toFixed(4)} ${symbol}</td>
+                        <td>$${pos.avgPrice.toFixed(2)}</td>
+                        <td>$${currentPrice.toFixed(2)}</td>
+                        <td class="${pnl >= 0 ? 'price-up' : 'price-down'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent.toFixed(2)}%)</td>
+                        <td>${ratio.toFixed(1)}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 更新交易历史
+        function updateTradeHistory() {
+            const tbody = document.getElementById('tradeHistory');
+            
+            if (account.trades.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">暂无成交记录</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = account.trades.slice(-10).reverse().map(trade => {
+                const time = new Date(trade.time).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                return `
+                    <tr>
+                        <td>${time}</td>
+                        <td>${trade.symbol}/USDT</td>
+                        <td class="${trade.side === 'buy' ? 'price-up' : 'price-down'}">${trade.side === 'buy' ? '买入' : '卖出'}</td>
+                        <td>$${trade.price.toFixed(2)}</td>
+                        <td>${trade.amount.toFixed(4)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 下单
+        function placeOrder(side) {
+            const symbol = document.getElementById('symbolSelect').value;
+            const price = parseFloat(document.getElementById('priceInput').value);
+            const amount = parseFloat(document.getElementById('amountInput').value);
+
+            if (!price || !amount || amount <= 0) {
+                showToast('请输入有效的价格和数量', 'error');
+                return;
+            }
+
+            const total = price * amount;
+            const fee = total * FEE_RATE;
+            const totalWithFee = side === 'buy' ? total + fee : total - fee;
+
+            if (side === 'buy') {
+                if (totalWithFee > account.balance) {
+                    showToast('可用余额不足', 'error');
+                    return;
+                }
+
+                account.balance -= totalWithFee;
+
+                if (account.positions[symbol]) {
+                    const pos = account.positions[symbol];
+                    const newCost = pos.cost + total;
+                    pos.amount += amount;
+                    pos.avgPrice = newCost / pos.amount;
+                    pos.cost = newCost;
+                } else {
+                    account.positions[symbol] = {
+                        amount: amount,
+                        avgPrice: price,
+                        cost: total
+                    };
+                }
+
+                showToast(`成功买入 ${amount.toFixed(4)} ${symbol}`, 'success');
+            } else {
+                if (!account.positions[symbol] || account.positions[symbol].amount < amount) {
+                    showToast('持仓不足', 'error');
+                    return;
+                }
+
+                account.balance += totalWithFee;
+
+                const pos = account.positions[symbol];
+                pos.amount -= amount;
+                pos.cost = pos.amount * pos.avgPrice;
+
+                if (pos.amount <= 0.0001) {
+                    delete account.positions[symbol];
+                }
+
+                showToast(`成功卖出 ${amount.toFixed(4)} ${symbol}`, 'success');
+            }
+
+            // 记录交易
+            account.trades.push({
+                time: Date.now(),
+                symbol: symbol,
+                side: side,
+                price: price,
+                amount: amount,
+                fee: fee
+            });
+
+            // 清空输入
+            document.getElementById('amountInput').value = '';
+            document.getElementById('totalInput').value = '';
+
+            saveData();
+            updateUI();
+        }
+
+        // 显示提示
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // 格式化金额
+        function formatMoney(value) {
+            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // 切换交易对
+        document.getElementById('symbolSelect').addEventListener('change', function() {
+            const symbol = this.value;
+            const price = prices[symbol].price;
+            document.getElementById('priceInput').value = price.toFixed(2);
+            document.getElementById('btcPrice').textContent = `$${price.toFixed(2)} ${prices[symbol].change >= 0 ? '▲' : '▼'} ${Math.abs(prices[symbol].change).toFixed(2)}%`;
+            document.getElementById('btcPrice').style.color = prices[symbol].change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+        });
+
+        // 数量变化时计算金额
+        document.getElementById('amountInput').addEventListener('input', function() {
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const amount = parseFloat(this.value) || 0;
+            document.getElementById('totalInput').value = (price * amount).toFixed(2);
+        });
+
+        // 金额变化时计算数量
+        document.getElementById('totalInput').addEventListener('input', function() {
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const total = parseFloat(this.value) || 0;
+            if (price > 0) {
+                document.getElementById('amountInput').value = (total / price).toFixed(4);
+            }
+        });
+
+        // 切换订单类型
+        document.querySelectorAll('.order-type-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.order-type-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 初始化
+        loadData();
+    </script>
 </body>
 </html>
