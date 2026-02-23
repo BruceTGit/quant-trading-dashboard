@@ -458,45 +458,77 @@
             <div class="tab-content" id="strategy-tab">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">我的策略</div>
-                        <button class="btn btn-primary" onclick="showStrategyModal()">+ 创建策略</button>
+                        <div class="card-title">自动运行策略</div>
+                        <div style="display: flex; gap: 10px;">
+                            <span id="strategyStatus" class="badge badge-success">运行中</span>
+                            <button class="btn btn-secondary" onclick="toggleAutoStrategy()" id="autoStrategyBtn">暂停</button>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <div id="strategyList">
-                            <div class="strategy-card">
-                                <div class="strategy-header">
-                                    <div>
-                                        <div class="strategy-name">网格交易策略 #1</div>
-                                        <div class="strategy-desc">BTC/USDT · 低频网格 · 已运行 12 天</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked onchange="toggleStrategy(this)">
-                                        <span class="slider"></span>
-                                    </label>
+                        <div class="strategy-card" style="border: 2px solid var(--accent-green);">
+                            <div class="strategy-header">
+                                <div>
+                                    <div class="strategy-name">双均线趋势策略 (自动)</div>
+                                    <div class="strategy-desc">BTC/USDT · 5日/20日均线交叉 · 实盘运行中</div>
                                 </div>
-                                <div class="strategy-stats">
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">+12.5%</div>
-                                        <div class="strategy-stat-label">累计收益</div>
-                                    </div>
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">68%</div>
-                                        <div class="strategy-stat-label">胜率</div>
-                                    </div>
-                                    <div class="strategy-stat">
-                                        <div class="strategy-stat-value">156</div>
-                                        <div class="strategy-stat-label">交易次数</div>
-                                    </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 24px; font-weight: 700; color: var(--accent-green);" id="strategyReturn">+0.00%</div>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">今日收益</div>
                                 </div>
                             </div>
-                            <div class="strategy-card">
-                                <div class="strategy-header">
-                                    <div>
-                                        <div class="strategy-name">趋势跟踪策略 #2</div>
-                                        <div class="strategy-desc">ETH/USDT · 中频趋势 · 已运行 5 天</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" onchange="toggleStrategy(this)">
+                            <div class="strategy-stats">
+                                <div class="strategy-stat">
+                                    <div class="strategy-stat-value" id="strategyTotalReturn">+0.00%</div>
+                                    <div class="strategy-stat-label">累计收益</div>
+                                </div>
+                                <div class="strategy-stat">
+                                    <div class="strategy-stat-value" id="strategyTrades">0</div>
+                                    <div class="strategy-stat-label">交易次数</div>
+                                </div>
+                                <div class="strategy-stat">
+                                    <div class="strategy-stat-value" id="strategyWinRate">0%</div>
+                                    <div class="strategy-stat-label">胜率</div>
+                                </div>
+                                <div class="strategy-stat">
+                                    <div class="strategy-stat-value" id="strategyPosition">空仓</div>
+                                    <div class="strategy-stat-label">当前状态</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 16px; padding: 12px; background: var(--bg-card); border-radius: 8px;">
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">策略信号</div>
+                                <div id="strategySignal" style="font-size: 14px;">等待信号...</div>
+                            </div>
+                            <div style="margin-top: 12px; font-size: 12px; color: var(--text-secondary);">
+                                策略规则：5日均线上穿20日均线买入，下穿卖出。每次投入50%资金，单笔止损-5%。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div class="card-title">策略交易记录</div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>信号</th>
+                                    <th>价格</th>
+                                    <th>仓位</th>
+                                    <th>盈亏</th>
+                                </tr>
+                            </thead>
+                            <tbody id="strategyTradeHistory">
+                                <tr>
+                                    <td colspan="5" class="empty-state">暂无交易记录</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
                                         <span class="slider"></span>
                                     </label>
                                 </div>
@@ -918,6 +950,193 @@
             });
         });
 
+        // 自动策略状态
+        let autoStrategy = {
+            enabled: true,
+            symbol: 'BTC',
+            position: 'none', // 'none', 'long'
+            entryPrice: 0,
+            trades: [],
+            wins: 0,
+            losses: 0,
+            priceHistory: [],
+            initialValue: 1000000
+        };
+
+        // 加载策略数据
+        function loadStrategyData() {
+            const saved = localStorage.getItem('autoStrategy');
+            if (saved) {
+                autoStrategy = JSON.parse(saved);
+            }
+            updateStrategyUI();
+        }
+
+        // 保存策略数据
+        function saveStrategyData() {
+            localStorage.setItem('autoStrategy', JSON.stringify(autoStrategy));
+        }
+
+        // 计算均线
+        function calculateMA(period) {
+            if (autoStrategy.priceHistory.length < period) return null;
+            const sum = autoStrategy.priceHistory.slice(-period).reduce((a, b) => a + b, 0);
+            return sum / period;
+        }
+
+        // 执行策略检查
+        function checkStrategy() {
+            if (!autoStrategy.enabled || prices.BTC === 0) return;
+
+            const currentPrice = prices.BTC;
+            autoStrategy.priceHistory.push(currentPrice);
+            if (autoStrategy.priceHistory.length > 50) {
+                autoStrategy.priceHistory.shift();
+            }
+
+            const ma5 = calculateMA(5);
+            const ma20 = calculateMA(20);
+
+            if (!ma5 || !ma20) {
+                document.getElementById('strategySignal').textContent = '收集数据中... (需要至少20个价格点)';
+                return;
+            }
+
+            const signal = document.getElementById('strategySignal');
+            const prevMa5 = autoStrategy.priceHistory.length > 5 ? 
+                autoStrategy.priceHistory.slice(-6, -1).reduce((a, b) => a + b, 0) / 5 : ma5;
+
+            // 金叉买入
+            if (prevMa5 <= ma20 && ma5 > ma20 && autoStrategy.position === 'none') {
+                executeStrategyOrder('buy', currentPrice);
+                signal.innerHTML = `<span class="price-up">🟢 买入信号触发</span> - 5日均线上穿20日均线 @ $${currentPrice.toFixed(2)}`;
+            }
+            // 死叉卖出
+            else if (prevMa5 >= ma20 && ma5 < ma20 && autoStrategy.position === 'long') {
+                executeStrategyOrder('sell', currentPrice);
+                signal.innerHTML = `<span class="price-down">🔴 卖出信号触发</span> - 5日均线下穿20日均线 @ $${currentPrice.toFixed(2)}`;
+            }
+            else {
+                signal.innerHTML = `MA5: $${ma5.toFixed(2)} | MA20: $${ma20.toFixed(2)} | ${ma5 > ma20 ? '<span class="price-up">多头</span>' : '<span class="price-down">空头</span>'}`;
+            }
+
+            // 止损检查
+            if (autoStrategy.position === 'long' && currentPrice < autoStrategy.entryPrice * 0.95) {
+                executeStrategyOrder('sell', currentPrice, true);
+                signal.innerHTML = `<span class="price-down">🔴 止损触发</span> - 价格下跌超过5% @ $${currentPrice.toFixed(2)}`;
+            }
+
+            updateStrategyUI();
+        }
+
+        // 执行策略订单
+        function executeStrategyOrder(side, price, isStopLoss = false) {
+            const investAmount = account.balance * 0.5; // 投入50%资金
+            
+            if (side === 'buy') {
+                const amount = investAmount / price;
+                const fee = investAmount * FEE_RATE;
+                account.balance -= (investAmount + fee);
+                account.positions.BTC = { amount, avgPrice: price, cost: investAmount };
+                autoStrategy.position = 'long';
+                autoStrategy.entryPrice = price;
+            } else {
+                if (!account.positions.BTC) return;
+                const pos = account.positions.BTC;
+                const sellValue = pos.amount * price;
+                const fee = sellValue * FEE_RATE;
+                const profit = sellValue - pos.cost - fee;
+                
+                account.balance += (sellValue - fee);
+                delete account.positions.BTC;
+                autoStrategy.position = 'none';
+                
+                if (profit > 0) autoStrategy.wins++;
+                else autoStrategy.losses++;
+            }
+
+            const trade = {
+                time: Date.now(),
+                side: side,
+                price: price,
+                amount: side === 'buy' ? investAmount / price : account.positions.BTC?.amount || 0,
+                isStopLoss: isStopLoss
+            };
+            autoStrategy.trades.push(trade);
+            account.trades.push({
+                time: Date.now(),
+                symbol: 'BTC',
+                side: side,
+                price: price,
+                amount: trade.amount,
+                fee: 0
+            });
+
+            saveData();
+            saveStrategyData();
+            updateUI();
+            updateStrategyTradeHistory();
+            
+            showToast(`策略${side === 'buy' ? '买入' : '卖出'} ${isStopLoss ? '(止损)' : ''} @ $${price.toFixed(2)}`, side === 'buy' ? 'success' : 'error');
+        }
+
+        // 更新策略UI
+        function updateStrategyUI() {
+            const totalTrades = autoStrategy.wins + autoStrategy.losses;
+            const winRate = totalTrades > 0 ? (autoStrategy.wins / totalTrades * 100).toFixed(0) : 0;
+            
+            // 计算收益
+            const positionValue = account.positions.BTC ? account.positions.BTC.amount * prices.BTC : 0;
+            const totalValue = account.balance + positionValue;
+            const totalReturn = ((totalValue - autoStrategy.initialValue) / autoStrategy.initialValue * 100).toFixed(2);
+            const todayReturn = ((totalValue - account.initialBalance) / account.initialBalance * 100).toFixed(2);
+
+            document.getElementById('strategyReturn').textContent = (todayReturn >= 0 ? '+' : '') + todayReturn + '%';
+            document.getElementById('strategyReturn').style.color = todayReturn >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('strategyTotalReturn').textContent = (totalReturn >= 0 ? '+' : '') + totalReturn + '%';
+            document.getElementById('strategyTotalReturn').style.color = totalReturn >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('strategyTrades').textContent = totalTrades;
+            document.getElementById('strategyWinRate').textContent = winRate + '%';
+            document.getElementById('strategyPosition').textContent = autoStrategy.position === 'long' ? '持仓' : '空仓';
+            document.getElementById('strategyPosition').style.color = autoStrategy.position === 'long' ? 'var(--accent-green)' : 'var(--text-secondary)';
+            
+            updateStrategyTradeHistory();
+        }
+
+        // 更新策略交易历史
+        function updateStrategyTradeHistory() {
+            const tbody = document.getElementById('strategyTradeHistory');
+            if (autoStrategy.trades.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">暂无交易记录</td></tr>';
+                return;
+            }
+            tbody.innerHTML = autoStrategy.trades.slice(-20).reverse().map(t => {
+                const time = new Date(t.time).toLocaleString('zh-CN', {month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'});
+                const signalText = t.side === 'buy' ? '买入' : (t.isStopLoss ? '止损卖出' : '卖出');
+                const signalClass = t.side === 'buy' ? 'price-up' : 'price-down';
+                return `<tr>
+                    <td>${time}</td>
+                    <td class="${signalClass}">${signalText}</td>
+                    <td>$${t.price.toFixed(2)}</td>
+                    <td>${t.amount ? t.amount.toFixed(4) + ' BTC' : '-'}</td>
+                    <td>-</td>
+                </tr>`;
+            }).join('');
+        }
+
+        // 切换自动策略
+        function toggleAutoStrategy() {
+            autoStrategy.enabled = !autoStrategy.enabled;
+            document.getElementById('autoStrategyBtn').textContent = autoStrategy.enabled ? '暂停' : '启动';
+            document.getElementById('strategyStatus').textContent = autoStrategy.enabled ? '运行中' : '已暂停';
+            document.getElementById('strategyStatus').className = autoStrategy.enabled ? 'badge badge-success' : 'badge badge-warning';
+            saveStrategyData();
+            showToast(autoStrategy.enabled ? '策略已启动' : '策略已暂停', 'success');
+        }
+
+        // 启动策略轮询
+        setInterval(checkStrategy, 10000); // 每10秒检查一次
+
         // 切换交易对
         document.getElementById('symbolSelect').addEventListener('change', function() {
             updatePriceDisplay();
@@ -945,6 +1164,7 @@
 
         // 初始化
         loadData();
+        loadStrategyData();
     </script>
 </body>
 </html>
